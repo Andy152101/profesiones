@@ -1,0 +1,1 @@
+export const TOKEN_SECRET = '2022EscuelaManizales@2024'
