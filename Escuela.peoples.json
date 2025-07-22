@@ -1,0 +1,189 @@
+[{
+  "_id": {
+    "$oid": "66a708075aab625b0b1c7053"
+  },
+  "names": "luis mauricio rojas serna",
+  "doctype": "Cédula",
+  "docnumber": "1053775378",
+  "birthdate": "1987-03-23",
+  "sex": "Masculino",
+  "phone": "3232832869",
+  "email": "lmrserna23@gmail.com",
+  "company": "SENA",
+  "companytime": "45",
+  "academiclevel": "Profesional",
+  "graduationdate": "2022-11-15",
+  "dominanthand": "Derecha",
+  "address": "carrera 27 # 17-35",
+  "neighborhood": "San antonio",
+  "municipality": "Manizales",
+  "createdAt": {
+    "$date": "2024-07-29T03:09:59.311Z"
+  },
+  "updatedAt": {
+    "$date": "2024-10-04T04:39:30.544Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66a708f45aab625b0b1c7065"
+  },
+  "names": "lizeht quintero ",
+  "doctype": "Cédula",
+  "docnumber": "1053805471",
+  "birthdate": "1990-06-13",
+  "sex": "Femenino",
+  "phone": "3232222222",
+  "email": "lizeth@gmail.com",
+  "company": "SENA",
+  "companytime": "60",
+  "academiclevel": "Especialista",
+  "graduationdate": "2023-11-28",
+  "dominanthand": "Izquierda",
+  "address": "carrera 23 # 17 - 35",
+  "neighborhood": "san antonio ",
+  "municipality": "Manizales",
+  "createdAt": {
+    "$date": "2024-07-29T03:13:56.802Z"
+  },
+  "updatedAt": {
+    "$date": "2024-07-29T03:13:56.802Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66a70e895aab625b0b1c70a5"
+  },
+  "names": "teresa serna",
+  "doctype": "Cédula",
+  "docnumber": "24856510",
+  "birthdate": "1980-03-19",
+  "sex": "Femenino",
+  "phone": "3117129931",
+  "email": "teresaserna@gmail.com",
+  "company": "SENA",
+  "companytime": "60",
+  "academiclevel": "Maestría",
+  "graduationdate": "2022-02-16",
+  "dominanthand": "Ambidiestro",
+  "address": "calle 68 # 34 - 71",
+  "neighborhood": "fatima",
+  "municipality": "Manizales",
+  "createdAt": {
+    "$date": "2024-07-29T03:37:45.966Z"
+  },
+  "updatedAt": {
+    "$date": "2024-07-29T03:37:45.966Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66a7a0bd5a9ed0dd89cc750b"
+  },
+  "names": "mauricio rojas ",
+  "doctype": "Cédula",
+  "docnumber": "1053775377",
+  "birthdate": "2024-07-03",
+  "sex": "Masculino",
+  "phone": "3232222222",
+  "email": "mauricio23333@hotmail.com",
+  "company": "SENA",
+  "companytime": "400",
+  "academiclevel": "Profesional",
+  "graduationdate": "2024-07-04",
+  "dominanthand": "Izquierda",
+  "address": "carrera 5",
+  "neighborhood": "sdfdsfdsf",
+  "municipality": "Manizales",
+  "createdAt": {
+    "$date": "2024-07-29T14:01:33.371Z"
+  },
+  "updatedAt": {
+    "$date": "2024-07-29T14:03:12.144Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66b0150aca8caab790d81f82"
+  },
+  "names": "jaime rojas",
+  "doctype": "Cédula",
+  "docnumber": "10222956",
+  "birthdate": "2024-07-31",
+  "sex": "Masculino",
+  "phone": "3128567195",
+  "email": "jaimerojas@gmail.com",
+  "company": "SENA",
+  "companytime": "500",
+  "academiclevel": "Tecnologo",
+  "graduationdate": "2024-08-01",
+  "dominanthand": "Derecha",
+  "address": "carrera 24",
+  "neighborhood": "fatima",
+  "municipality": "La Merced",
+  "createdAt": {
+    "$date": "2024-08-04T23:55:54.707Z"
+  },
+  "updatedAt": {
+    "$date": "2024-10-08T13:29:02.602Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66b01558ca8caab790d81f8d"
+  },
+  "names": "bianny",
+  "doctype": "Cédula",
+  "docnumber": "10538047775",
+  "birthdate": "2024-07-31",
+  "sex": "Femenino",
+  "phone": "3223336669",
+  "email": "bianny@gmail.com",
+  "company": "SENA",
+  "companytime": "600",
+  "academiclevel": "Técnico",
+  "graduationdate": "2024-07-31",
+  "dominanthand": "Izquierda",
+  "address": "sadsad",
+  "neighborhood": "adasd",
+  "municipality": "Norcasia",
+  "createdAt": {
+    "$date": "2024-08-04T23:57:12.738Z"
+  },
+  "updatedAt": {
+    "$date": "2024-08-04T23:57:47.980Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67469cc3b6c3f30e706b5ace"
+  },
+  "names": "gloria",
+  "doctype": "Cédula",
+  "docnumber": "3234424",
+  "birthdate": "2024-11-01",
+  "sex": "Femenino",
+  "phone": "2055555555",
+  "email": "gloria@gmail.com",
+  "company": "SENA",
+  "companytime": "50",
+  "academiclevel": "Magíster",
+  "graduationdate": "2024-11-13",
+  "dominanthand": "Derecha",
+  "address": "cadads",
+  "neighborhood": "asdsad",
+  "municipality": "Manizales",
+  "createdAt": {
+    "$date": "2024-11-27T04:14:59.875Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-27T04:17:27.338Z"
+  },
+  "__v": 0
+}]

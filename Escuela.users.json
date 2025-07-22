@@ -1,0 +1,64 @@
+[{
+  "_id": {
+    "$oid": "66fdf7fd367941ffffd18c70"
+  },
+  "username": "jaime",
+  "email": "jaime@gmail.com",
+  "password": "$2a$10$rn3qanf8v15JfyKIaqNP6.tktY8rvbmt/BFdxORnuw0ZngoSIowb6",
+  "role": "admin",
+  "createdAt": {
+    "$date": "2024-10-03T01:48:45.114Z"
+  },
+  "updatedAt": {
+    "$date": "2024-10-03T01:48:45.114Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66fdf86b367941ffffd18c73"
+  },
+  "username": "teresa",
+  "email": "teresa@gmail.com",
+  "password": "$2a$10$rxw15jFWMqcBgxLoodZTKuVWY/IejiMJeedaicqHPIEpISitqYZaq",
+  "role": "user",
+  "createdAt": {
+    "$date": "2024-10-03T01:50:35.231Z"
+  },
+  "updatedAt": {
+    "$date": "2024-10-03T01:50:35.231Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66fdf932a31b40001ba88da4"
+  },
+  "username": "andres",
+  "email": "andres@gmail.com",
+  "password": "$2a$10$7/gKnN6blJRDPQ3vVZtFAeSvCTdyhey3kNAkAMftXicKtp.wyMnna",
+  "role": "editor",
+  "createdAt": {
+    "$date": "2024-10-03T01:53:54.768Z"
+  },
+  "updatedAt": {
+    "$date": "2024-10-03T01:53:54.768Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6704bd2229e294f919aa0bf0"
+  },
+  "username": "mauricio",
+  "email": "mauricio@gmail.com",
+  "password": "$2a$10$7TqpcFG78whixffxCt4wWeHeof4JuOuyHsvQZRUgvMZSp6o24NOXe",
+  "role": "editor",
+  "createdAt": {
+    "$date": "2024-10-08T05:03:30.191Z"
+  },
+  "updatedAt": {
+    "$date": "2024-10-08T05:04:14.187Z"
+  },
+  "__v": 0
+}]

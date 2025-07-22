@@ -1,0 +1,100 @@
+[{
+  "_id": {
+    "$oid": "669aca38b00b774f9c1abae5"
+  },
+  "title": "Primer tarea",
+  "description": "todo good ",
+  "date": {
+    "$date": "2024-07-19T20:19:04.659Z"
+  },
+  "user": {
+    "$oid": "663c4afffdbc2b07499fe2b8"
+  },
+  "createdAt": {
+    "$date": "2024-07-19T20:19:04.660Z"
+  },
+  "updatedAt": {
+    "$date": "2024-07-20T04:02:15.966Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "669b276c2006edaa4e890c3c"
+  },
+  "title": "editar ",
+  "description": "con exito",
+  "date": {
+    "$date": "2024-07-20T02:56:44.392Z"
+  },
+  "user": {
+    "$oid": "663c4afffdbc2b07499fe2b8"
+  },
+  "createdAt": {
+    "$date": "2024-07-20T02:56:44.396Z"
+  },
+  "updatedAt": {
+    "$date": "2024-07-20T02:56:44.396Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "669b27792006edaa4e890c46"
+  },
+  "title": "nuevo id",
+  "description": "con toda papa\n",
+  "date": {
+    "$date": "2024-07-20T02:56:57.207Z"
+  },
+  "user": {
+    "$oid": "663c4afffdbc2b07499fe2b8"
+  },
+  "createdAt": {
+    "$date": "2024-07-20T02:56:57.208Z"
+  },
+  "updatedAt": {
+    "$date": "2024-07-20T02:56:57.208Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "669b34572006edaa4e890c6e"
+  },
+  "title": "nuevo id",
+  "description": "con toda papa\n",
+  "date": {
+    "$date": "2024-07-20T03:51:51.105Z"
+  },
+  "user": {
+    "$oid": "663c4afffdbc2b07499fe2b8"
+  },
+  "createdAt": {
+    "$date": "2024-07-20T03:51:51.106Z"
+  },
+  "updatedAt": {
+    "$date": "2024-07-20T03:51:51.106Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "669b345e2006edaa4e890c79"
+  },
+  "title": "editar ",
+  "description": "con exito",
+  "date": {
+    "$date": "2024-07-20T03:51:58.264Z"
+  },
+  "user": {
+    "$oid": "663c4afffdbc2b07499fe2b8"
+  },
+  "createdAt": {
+    "$date": "2024-07-20T03:51:58.265Z"
+  },
+  "updatedAt": {
+    "$date": "2024-07-20T03:51:58.265Z"
+  },
+  "__v": 0
+}]
