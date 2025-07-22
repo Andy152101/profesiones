@@ -17,7 +17,6 @@ app.use(cors({
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(cookieParser());
-
 app.use('/api', authRoutes);
 app.use('/api', tasksRoutes);
 app.use('/api', peopleRoutes);
