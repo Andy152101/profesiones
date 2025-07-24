@@ -37,7 +37,8 @@ export const AuthProvider = ({ children }) => {
             setUser(res.data); // Asegúrate de que res.data incluya el rol
             setIsAuthenticated(true);
         } catch (error) {
-            setErrors(error.response?.data || ['Error al iniciar sesión.']);
+            console.log("Error al iniciar sesion ", error)
+            setErrors([error.response?.data.message ?? 'Error al iniciar sesión.']);
         }
     };
 
@@ -65,7 +66,7 @@ export const AuthProvider = ({ children }) => {
         } catch (error) {
             setErrors([error.response.data.message]);
         }
-    }, []);;
+    }, []);
 
     const getRegister = async (id) => {
         try {
