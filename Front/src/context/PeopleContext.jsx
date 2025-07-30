@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useCallback } from "react";
 import { createPeopleRequest, getPeoplesRequest, deletePeopleRequest, getPeopleByDocNumberRequest, getPeopleRequest, updatePeopleRequest } from "../api/people.js";
 
 const PeopleContext = createContext();
@@ -14,27 +14,28 @@ export function PeopleProvider({ children }) {
   const [filteredPeople, setFilteredPeople] = useState([]);
   const [error, setError] = useState({});
 
-  const getPeoples = async () => {
+  const getPeoples = useCallback(async () => {
     try {
       const res = await getPeoplesRequest();
       setPeoples(res.data);
+      console.log("Fetched peoples:", res.data); 
     } catch (err) {
-      console.error('Error fetching people:', err);
-      setError('Error fetching people');
+      console.error("Error fetching people:", err);
+      setError("Error fetching people");
     }
-  };
+  }, []);
 
-  const getPeople = async (id) => {
+  const getPeople = useCallback(async (id) => {
     try {
       const response = await getPeopleRequest(id);
       return response.data;
     } catch (error) {
-      console.error('Error fetching person:', error);
-      setError('Error fetching person');
+      console.error("Error fetching person:", error);
+      setError("Error fetching person");
     }
-  };
+  }, []);
 
-  const createPeoples = async (form) => {
+  const createPeoples = useCallback(async (form) => {
     try {
       const result = await createPeopleRequest(form);
       if (result.error) {
@@ -44,22 +45,22 @@ export function PeopleProvider({ children }) {
       setError({}); // Limpia errores previos en caso de éxito
       return true;
     } catch (error) {
-      setError({ formError: 'Error desconocido al crear persona.' });
+      setError({ formError: "Error desconocido al crear persona." });
       return false;
     }
-  };
+  }, []);
 
-  const deletePeople = async (id) => {
+  const deletePeople = useCallback(async (id) => {
     try {
       const res = await deletePeopleRequest(id);
       if (res.status === 200) setPeoples(peoples.filter((people) => people._id !== id));
     } catch (error) {
-      console.error('Error deleting person:', error);
-      setError('Error deleting person');
+      console.error("Error deleting person:", error);
+      setError("Error deleting person");
     }
-  };
+  }, [peoples]); // Dependencia: peoples para filtrar correctamente
 
-  const getPeopleByDocNumber = async (docnumber) => {
+  const getPeopleByDocNumber = useCallback(async (docnumber) => {
     try {
       const res = await getPeopleByDocNumberRequest(docnumber);
       if (res.data.length > 0) {
@@ -68,18 +69,17 @@ export function PeopleProvider({ children }) {
         setFilteredPeople([]);
       }
     } catch (error) {
-      console.error('Error fetching people by document number:', error);
+      console.error("Error fetching people by document number:", error);
       setFilteredPeople([]);
     }
-  };
+  }, []);
 
-
-  const searchPeople = (docnumber) => {
+  const searchPeople = useCallback((docnumber) => {
     const results = peoples.filter(person => person.docnumber.includes(docnumber));
     setFilteredPeople(results);
-  };
+  }, [peoples]); // Dependencia: peoples para filtrar correctamente
 
-  const updatePeople = async (id, data) => {
+  const updatePeople = useCallback(async (id, data) => {
     try {
       const response = await updatePeopleRequest(id, data);
       setPeoples((prevPeople) =>
@@ -87,10 +87,11 @@ export function PeopleProvider({ children }) {
       );
       return true;
     } catch (err) {
-      setError({ updateError: 'Error updating people' });
+      setError({ updateError: "Error updating people" });
       return false;
     }
-  };
+  }, []);
+
   return (
     <PeopleContext.Provider
       value={{

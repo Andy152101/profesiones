@@ -7,18 +7,18 @@ import exportToExcel from "../pages/Excel y Graficos/peopleGrafico";
 function PeoplePage() {
   const { getPeoples, peoples, getPeople } = usePeoples();
   const [searchDocNumber, setSearchDocNumber] = useState('');
-  const [filteredPeoples, setFilteredPeoples] = useState(peoples);
+  const [filteredPeoples, setFilteredPeoples] = useState([]);
 
   useEffect(() => {
     getPeoples();
-  }, []);
+  }, [getPeoples]);
 
   useEffect(() => {
     setFilteredPeoples(peoples);
   }, [peoples]);
 
   const handleSearch = async () => {
-    if (searchDocNumber === '') {
+    if (searchDocNumber.trim() === '') {
       setFilteredPeoples(peoples);
     } else {
       const filtered = peoples.filter((people) => people.docnumber === searchDocNumber);
@@ -33,12 +33,10 @@ function PeoplePage() {
 
   const handleInputChange = (e) => {
     setSearchDocNumber(e.target.value);
-    if (e.target.value === '') {
+    if (e.target.value.trim() === '') {
       setFilteredPeoples(peoples);
     }
   };
-
-  if (peoples.length === 0) return <h1>No tasks</h1>;
 
   return (
     <div className="p-6">
@@ -70,14 +68,17 @@ function PeoplePage() {
           </button>
         </div>
       </div>
-      <div>
-        {filteredPeoples.map((people) => (
-          <PeopleIndex people={people} key={people._id} />
-        ))}
-      </div>
+      {filteredPeoples.length === 0 ? (
+        <h1 className="text-black">No people found</h1>
+      ) : (
+        <div>
+          {filteredPeoples.map((people) => (
+            <PeopleIndex people={people} key={people._id} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
 
 export default PeoplePage;
-
