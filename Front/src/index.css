@@ -1,4 +1,8 @@
-@tailwind base;
+/*
+  index.css: Estilos globales de la aplicación
+  - Incluye las directivas de Tailwind para base, componentes y utilidades
+  - Define estilos globales para el body
+*/@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
