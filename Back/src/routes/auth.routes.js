@@ -10,6 +10,9 @@ import {
   viewRegister,
   deleteRegisters,
   updateRegisters,
+  validateAccessCode,
+  registerEmployee,
+  registerConsultant,
 } from "../controllers/auth.controller.js";
 import { authRequierd } from "../middlewares/validateToken.js";
 import { validateSchema } from "../middlewares/validator.middleware.js";
@@ -24,8 +27,11 @@ router.post(
   authRequierd,
   register
 );
+router.post("/register-employee", registerEmployee);
 // Obtiene todos los registros de usuarios
-router.get("/registers", getAllRegisters);
+router.get("/registers", authRequierd, getAllRegisters);
+// Registra un nuevo consultor
+router.post("/register-consultant", registerConsultant);
 // Obtiene un registro específico por ID
 router.get("/register/:id", viewRegister);
 // Elimina un registro por ID
@@ -40,6 +46,9 @@ router.post("/logout", logout);
 router.get("/verify", verifyToken);
 // Obtiene el perfil del usuario autenticado
 router.get("/profile", authRequierd, profile);
+
+// Valida un código de acceso
+router.post("/validate-access-code", validateAccessCode);
 
 // Exporta el router para ser usado en la app principal
 export default router;

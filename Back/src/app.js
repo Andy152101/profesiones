@@ -10,6 +10,7 @@ import authRoutes from "./routes/auth.routes.js";
 import tasksRoutes from "./routes/tasks.routes.js";
 import peopleRoutes from "./routes/people.routes.js";
 import testsRoutes from "./routes/tests.routes.js";
+import companyRoutes from "./routes/company.routes.js";
 import cors from "cors";
 
 // Inicializa la aplicación Express
@@ -34,6 +35,7 @@ app.use(cookieParser());
 
 // Rutas de la API
 // Cada ruta se prefija con '/api' y se asocia a un conjunto de rutas específicas.
+app.use("/api/companies", companyRoutes); // Rutas para la gestión de empresas
 app.use("/api", authRoutes); // Rutas para autenticación (registro, login, etc.)
 app.use("/api", tasksRoutes); // Rutas para la gestión de tareas
 app.use("/api", peopleRoutes); // Rutas para la gestión de personas

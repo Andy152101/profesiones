@@ -1,11 +1,19 @@
 import { createContext, useContext, useState, useCallback } from "react";
-import { createPeopleRequest, getPeoplesRequest, deletePeopleRequest, getPeopleByDocNumberRequest, getPeopleRequest, updatePeopleRequest } from "../api/people.js";
+import {
+  createPeopleRequest,
+  getPeoplesRequest,
+  deletePeopleRequest,
+  getPeopleByDocNumberRequest,
+  getPeopleRequest,
+  updatePeopleRequest,
+} from "../api/people.js";
 
 const PeopleContext = createContext();
 
 export const usePeoples = () => {
   const context = useContext(PeopleContext);
-  if (!context) throw new Error("usePeoples must be used within a PeopleProvider");
+  if (!context)
+    throw new Error("usePeoples must be used within a PeopleProvider");
   return context;
 };
 
@@ -18,7 +26,7 @@ export function PeopleProvider({ children }) {
     try {
       const res = await getPeoplesRequest();
       setPeoples(res.data);
-      console.log("Fetched peoples:", res.data); 
+      console.log("Fetched peoples:", res.data);
     } catch (err) {
       console.error("Error fetching people:", err);
       setError("Error fetching people");
@@ -50,15 +58,19 @@ export function PeopleProvider({ children }) {
     }
   }, []);
 
-  const deletePeople = useCallback(async (id) => {
-    try {
-      const res = await deletePeopleRequest(id);
-      if (res.status === 200) setPeoples(peoples.filter((people) => people._id !== id));
-    } catch (error) {
-      console.error("Error deleting person:", error);
-      setError("Error deleting person");
-    }
-  }, [peoples]); // Dependencia: peoples para filtrar correctamente
+  const deletePeople = useCallback(
+    async (id) => {
+      try {
+        const res = await deletePeopleRequest(id);
+        if (res.status === 200)
+          setPeoples(peoples.filter((people) => people._id !== id));
+      } catch (error) {
+        console.error("Error deleting person:", error);
+        setError("Error deleting person");
+      }
+    },
+    [peoples]
+  ); // Dependencia: peoples para filtrar correctamente
 
   const getPeopleByDocNumber = useCallback(async (docnumber) => {
     try {
@@ -74,10 +86,15 @@ export function PeopleProvider({ children }) {
     }
   }, []);
 
-  const searchPeople = useCallback((docnumber) => {
-    const results = peoples.filter(person => person.docnumber.includes(docnumber));
-    setFilteredPeople(results);
-  }, [peoples]); // Dependencia: peoples para filtrar correctamente
+  const searchPeople = useCallback(
+    (docnumber) => {
+      const results = peoples.filter((person) =>
+        person.docnumber.includes(docnumber)
+      );
+      setFilteredPeople(results);
+    },
+    [peoples]
+  ); // Dependencia: peoples para filtrar correctamente
 
   const updatePeople = useCallback(async (id, data) => {
     try {
@@ -105,7 +122,7 @@ export function PeopleProvider({ children }) {
         updatePeople,
         getPeopleByDocNumber,
         searchPeople,
-        setError // Provide a way to clear the error
+        setError, // Provide a way to clear the error
       }}
     >
       {children}

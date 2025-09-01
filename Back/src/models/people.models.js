@@ -41,10 +41,7 @@ const peopleSchema = new mongoose.Schema(
       unique: true,
     },
     //empresa donde trabaja la persona
-    company: {
-      type: String,
-      required: true,
-    },
+
     //tiempo de trabajo en la empresa
     companytime: {
       type: String,

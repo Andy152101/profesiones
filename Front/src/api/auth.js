@@ -1,12 +1,45 @@
-import axios from './axios'
+import axios from "./axios";
 
+// Autenticación básica
+export const registerRequest = (user) => axios.post(`/register`, user);
+export const loginRequest = (user) => axios.post(`/login`, user);
+export const verifiTokenRequet = () => axios.get("/verify");
 
+// Nuevos endpoints de registro
+export const registerEmployeeRequest = (employeeData) =>
+  axios.post(`/register-employee`, employeeData);
+export const registerConsultantRequest = (consultantData) => {
+  // Validar que companyRef exista
+  if (!consultantData.companyRef) {
+    throw new Error("companyRef es requerido");
+  }
 
-export const registerRequest = (user) => axios.post(`/register`, user)
+  // Enviar siempre el rol correcto según enum
+  return axios.post(`/register-consultant`, {
+    ...consultantData,
+    role: "consultorEmpresa", // <-- coincide con tu enum
+  });
+};
+
+// Gestión de usuarios
 export const getRegistersRequest = () => axios.get(`/registers`);
 export const getRegisterRequest = (id) => axios.get(`/register/${id}`);
-export const updateRegistersRequest = (id, user) => axios.put(`/registers/${id}`, user);
-export const deleteRegistersRequest = async (id) => axios.delete(`/registers/${id}`);
-export const loginRequest = user =>axios.post(`/login`, user)
+export const updateRegistersRequest = (id, user) =>
+  axios.put(`/registers/${id}`, user);
+export const deleteRegistersRequest = async (id) =>
+  axios.delete(`/registers/${id}`);
 
-export const verifiTokenRequet = () => axios.get('/verify')
+// Gestión de empresas
+export const requestCompanyRegistrationRequest = (companyData) =>
+  axios.post(`/companies/request-registration`, companyData);
+export const getAllCompaniesRequest = () => axios.get(`/companies`);
+export const getCompanyRequest = (id) => axios.get(`/companies/${id}`);
+export const updateCompanyRequest = (id, companyData) =>
+  axios.put(`/companies/${id}`, companyData);
+export const deleteCompanyRequest = (id) => axios.delete(`/companies/${id}`);
+export const getCompanyStatsRequest = () => axios.get(`/companies/stats`);
+export const validateAccessCodeRequest = (code) =>
+  axios.post(`/validate-access-code`, { code });
+// Agregar esta función a tu archivo api/auth.js
+export const getTestsRequest = () => axios.get("/tests");
+export const getTestStatsRequest = () => axios.get("/tests/stats");
