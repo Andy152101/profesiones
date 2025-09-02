@@ -1,151 +1,155 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import instance from "../api/axios";
-import { useForm } from "react-hook-form";
 
-function CompanyPage() {
-  const { token } = useAuth();
-  const [companies, setCompanies] = useState([]);
-  const [showForm, setShowForm] = useState(false);
-  const { register, handleSubmit, reset } = useForm();
+function CreateCompanyPage() {
+  const { requestCompanyRegistration } = useAuth();
+  const navigate = useNavigate();
 
-  // Cargar empresas
-  useEffect(() => {
-    const fetchCompanies = async () => {
-      try {
-        const res = await instance.get("/companies", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        console.log("📌 Empresas recibidas del backend:", res.data);
-        setCompanies(res.data);
-      } catch (err) {
-        console.error("❌ Error trayendo empresas:", err);
-        console.error(err);
-      }
-    };
-    fetchCompanies();
-  }, [token]);
+  const [company, setCompany] = useState({
+    name: "",
+    contactEmail: "",
+    contactPhone: "",
+    address: "",
+    description: "",
+  });
 
-  // Crear empresa
-  const onSubmit = async (data) => {
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    setCompany({ ...company, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    if (!company.name || !company.contactEmail) {
+      setError("Por favor completa al menos Nombre y Email.");
+      setLoading(false);
+      return;
+    }
+
     try {
-      const res = await instance.post("/companies", data, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setCompanies([...companies, res.data.company]);
-      setShowForm(false);
-      reset();
-    } catch (error) {
-      alert(error.response?.data?.message || "Error al crear empresa");
+      await requestCompanyRegistration(company);
+      navigate("/companiesPage");
+    } catch (err) {
+      if (err.response?.status === 403) {
+        setError("No tienes permisos para registrar empresas.");
+      } else {
+        setError("Error al registrar la empresa. Intenta de nuevo.");
+      }
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="p-6">
-      {!showForm ? (
-        <>
-          <h1 className="text-2xl font-bold mb-6 text-center text-blueSena">
-            Empresas Registradas
-          </h1>
+    <div className="flex justify-center items-center min-h-screen bg-gray-100">
+      <div className="bg-blueSena w-full max-w-2xl  p-10 rounded-md shadow-lg">
+        <h1 className="text-2xl font-bold text-white text-center mb-6">
+          Registrar Nueva Empresa
+        </h1>
 
-          <div className="overflow-x-auto shadow-lg rounded-md">
-            <table className="w-full bg-blueSena rounded-lg border-collapse">
-              <thead className="bg-gray-700 text-white text-center rounded-t-lg">
-                <tr>
-                  <th className="px-4 py-2">Nombre</th>
-                  <th className="px-4 py-2">Email</th>
-                  <th className="px-4 py-2">Teléfono</th>
-                  <th className="px-4 py-2">Dirección</th>
-                </tr>
-              </thead>
-              <tbody>
-                {companies.map((company, index) => (
-                  <tr
-                    key={company._id || index}
-                    className="text-center bg-blueSena text-white hover:bg-blue-900 transition"
-                  >
-                    <td className="px-4 py-2 border-b border-white/20">
-                      {company.name}
-                    </td>
-                    <td className="px-4 py-2 border-b border-white/20">
-                      {company.contactEmail}
-                    </td>
-                    <td className="px-4 py-2 border-b border-white/20">
-                      {company.contactPhone}
-                    </td>
-                    <td className="px-4 py-2 border-b border-white/20">
-                      {company.address}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        {error && (
+          <div className="bg-red-100 text-red-600 p-2 mb-4 rounded">
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-5 ">
+          {/* Campo: Nombre */}
+          <div className="w-11/12 mx-auto">
+            <label className="block text-sm font-medium text-white mb-2">
+              Nombre de la empresa
+            </label>
+            <input
+              type="text"
+              name="name"
+              placeholder="Nombre de la empresa"
+              value={company.name}
+              onChange={handleChange}
+              className="w-full p-2 rounded-md bg-white text-black outline-none placeholder-gray-400"
+            />
           </div>
 
-          <div className="flex justify-center mt-6">
+          {/* Campo: Email */}
+          <div className="w-11/12 mx-auto">
+            <label className="block text-sm font-medium text-white mb-2">
+              Email
+            </label>
+            <input
+              type="email"
+              name="contactEmail"
+              placeholder="Correo electrónico"
+              value={company.contactEmail}
+              onChange={handleChange}
+              className="w-full p-2 rounded-md bg-white text-black outline-none placeholder-gray-400"
+            />
+          </div>
+
+          {/* Campo: Teléfono */}
+          <div className="w-11/12 mx-auto">
+            <label className="block text-sm font-medium text-white mb-2">
+              Teléfono
+            </label>
+            <input
+              type="text"
+              name="contactPhone"
+              placeholder="Teléfono"
+              value={company.contactPhone}
+              onChange={handleChange}
+              className="w-full p-2 rounded-md bg-white text-black outline-none placeholder-gray-400"
+            />
+          </div>
+
+          {/* Campo: Dirección */}
+          <div className="w-11/12 mx-auto">
+            <label className="block text-sm font-medium text-white mb-2">
+              Dirección
+            </label>
+            <input
+              type="text"
+              name="address"
+              placeholder="Dirección"
+              value={company.address}
+              onChange={handleChange}
+              className="w-full p-2 rounded-md bg-white text-black outline-none placeholder-gray-400"
+            />
+          </div>
+
+          {/* Campo: Descripción */}
+          <div className="w-11/12 mx-auto">
+            <label className="block text-sm font-medium text-white mb-2">
+              Descripción
+            </label>
+            <input
+              type="text"
+              name="description"
+              placeholder="Descripción"
+              value={company.description}
+              onChange={handleChange}
+              className="w-full p-2 rounded-md bg-white text-black outline-none placeholder-gray-400"
+            />
+          </div>
+
+          {/* Botón */}
+          <div className="flex justify-center mt-4">
             <button
-              onClick={() => setShowForm(true)}
-              className="bg-ester text-white px-6 py-2 rounded-md hover:bg-green-600 transition"
+              type="submit"
+              disabled={loading}
+              className="bg-ester text-white py-2 px-6 rounded-md"
             >
-              Registrar Nueva Empresa
+              {loading ? "Registrando..." : "Registrar"}
             </button>
           </div>
-        </>
-      ) : (
-        <div className="flex items-center justify-center my-6 px-4">
-          <div className="bg-blueSena max-w-2xl w-full p-6 md:p-10 rounded-md shadow-lg">
-            <h1 className="text-2xl font-bold mb-6 text-white text-center">
-              Registrar Nueva Empresa
-            </h1>
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-              <input
-                {...register("name", { required: true })}
-                placeholder="Nombre"
-                className="border p-2 w-full rounded text-black"
-              />
-              <input
-                {...register("description")}
-                placeholder="Descripción"
-                className="border p-2 w-full rounded text-black"
-              />
-              <input
-                {...register("contactEmail", { required: true })}
-                placeholder="Email de contacto"
-                type="email"
-                className="border p-2 w-full rounded text-black"
-              />
-              <input
-                {...register("contactPhone")}
-                placeholder="Teléfono de contacto"
-                className="border p-2 w-full rounded text-black"
-              />
-              <input
-                {...register("address")}
-                placeholder="Dirección"
-                className="border p-2 w-full rounded text-black"
-              />
-
-              <div className="flex justify-between mt-6">
-                <button
-                  type="button"
-                  onClick={() => setShowForm(false)}
-                  className="bg-gray-400 text-white px-6 py-2 rounded-md hover:bg-gray-500 transition"
-                >
-                  Cancelar
-                </button>
-                <button
-                  type="submit"
-                  className="bg-ester text-white px-6 py-2 rounded-md hover:bg-green-600 transition"
-                >
-                  Crear Empresa
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+        </form>
+      </div>
     </div>
   );
 }
 
-export default CompanyPage;
+export default CreateCompanyPage;

@@ -23,7 +23,9 @@ import GraficaPowerBi from "./pages/Excel y Graficos/GraficoPowerBi";
 
 // Nuevas páginas del sistema mejorado
 //import CompanyRegistrationPage from "./pages/CompanyRegistrationPage";
+import CompaniesPage from "./pages/CompanyPage";
 import CreateCompanyPage from "./pages/CreateCompanyPage";
+import EditCompanyPage from "./pages/CompanyEdit";
 
 // Componentes y rutas protegidas
 import Navbar from "./components/Navbar";
@@ -90,6 +92,11 @@ function App() {
                   <Route
                     path="/create-company"
                     element={<CreateCompanyPage />}
+                  />
+                  <Route path="/companiesPage" element={<CompaniesPage />} />
+                  <Route
+                    path="/companies/:id/edit"
+                    element={<EditCompanyPage />}
                   />
                 </Route>
               </Routes>

@@ -126,10 +126,13 @@ export const AuthProvider = ({ children }) => {
       const res = await requestCompanyRegistrationRequest(companyData);
       return res.data;
     } catch (error) {
-      setErrors([
-        error.response?.data?.message ||
-          "Error al solicitar registro de empresa.",
-      ]);
+      if (error.response?.status === 403) {
+        setErrors(["No tienes permisos para registrar empresas."]);
+      } else {
+        setErrors([
+          error.response?.data?.message || "Error al registrar la empresa.",
+        ]);
+      }
       throw error;
     }
   };
@@ -230,11 +233,13 @@ export const AuthProvider = ({ children }) => {
   const updateRegister = async (id, updatedData) => {
     try {
       const res = await updateRegistersRequest(id, updatedData);
-      setSelectedRegister(res.data);
+      setSelectedRegister(res); // tu updateRegistersRequest ya devuelve res.data
+      return true; // ✅ indica que la actualización fue exitosa
     } catch (error) {
       setErrors([
         error.response?.data?.message || "Error al actualizar registro.",
       ]);
+      return false; // ❌ indica que hubo un error
     }
   };
 

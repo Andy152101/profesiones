@@ -23,15 +23,25 @@ export const registerConsultantRequest = (consultantData) => {
 
 // Gestión de usuarios
 export const getRegistersRequest = () => axios.get(`/registers`);
-export const getRegisterRequest = (id) => axios.get(`/register/${id}`);
+export const getRegisterRequest = (id) => axios.get(`/registers/${id}`);
 export const updateRegistersRequest = (id, user) =>
-  axios.put(`/registers/${id}`, user);
+  axios
+    .put(`/registers/${id}`, user) // no hace falta { withCredentials } aquí, ya lo tiene el instance
+    .then((res) => res.data)
+    .catch((err) => {
+      console.error(
+        "Error actualizando usuario:",
+        err.response?.data || err.message
+      );
+      throw err;
+    });
+
 export const deleteRegistersRequest = async (id) =>
   axios.delete(`/registers/${id}`);
 
 // Gestión de empresas
 export const requestCompanyRegistrationRequest = (companyData) =>
-  axios.post(`/companies/request-registration`, companyData);
+  axios.post(`/companies`, companyData); // coincide con la ruta solo admin
 export const getAllCompaniesRequest = () => axios.get(`/companies`);
 export const getCompanyRequest = (id) => axios.get(`/companies/${id}`);
 export const updateCompanyRequest = (id, companyData) =>

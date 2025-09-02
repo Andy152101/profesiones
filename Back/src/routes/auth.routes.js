@@ -33,11 +33,11 @@ router.get("/registers", authRequierd, getAllRegisters);
 // Registra un nuevo consultor
 router.post("/register-consultant", registerConsultant);
 // Obtiene un registro específico por ID
-router.get("/register/:id", viewRegister);
+router.get("/registers/:id", authRequierd, viewRegister);
 // Elimina un registro por ID
 router.delete("/registers/:id", deleteRegisters);
 // Actualiza un registro por ID
-router.put("/registers/:id", updateRegisters);
+router.put("/registers/:id", authRequierd, updateRegisters);
 // Inicia sesión (login) con validación de esquema
 router.post("/login", validateSchema(loginSchema), login);
 // Cierra sesión (logout)

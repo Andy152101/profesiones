@@ -6,6 +6,7 @@ import bcrypt from "bcryptjs";
 import { createAccessToken } from "../libs/jwt.js";
 import jwt from "jsonwebtoken";
 import { TOKEN_SECRET } from "../config.js";
+import mongoose from "mongoose";
 
 // Registra un nuevo usuario en la base de datos.
 // 1. Extrae los datos del cuerpo de la petición.
@@ -491,39 +492,60 @@ export const getAllRegisters = async (req, res) => {
 // 3. Busca el usuario en la base de datos.
 // 4. Si no encuentra el usuario, responde con 404.
 // 5. Si encuentra el usuario, responde con 200 y usuario.
+// 📌 Obtener un registro por ID
 export const viewRegister = async (req, res) => {
-  const { id } = req.params;
   try {
-    // 2. Verificar permisos
-    if (req.user.role === "empleado" && req.user.id !== id) {
-      return res
-        .status(403)
-        .json({ message: "Solo puede ver su propio perfil" });
+    const { id } = req.params;
+
+    // 1. Validar que el ID sea un ObjectId válido
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "ID inválido" });
     }
 
+    // 2. Buscar el usuario en la BD (sin password)
     const user = await User.findById(id)
       .select("-password")
       .populate("companyRef", "name")
-      .populate("peopleRef");
+      .exec();
 
     if (!user) {
       return res.status(404).json({ message: "Usuario no encontrado" });
     }
 
-    // Verificar que consultor solo vea usuarios de su empresa
-    if (req.user.role === "consultorEmpresa") {
-      if (
-        user.companyRef &&
-        user.companyRef._id.toString() !== req.user.companyRef.toString() &&
-        user._id.toString() !== req.user.id
-      ) {
-        return res.status(403).json({ message: "Acceso denegado" });
-      }
+    // 3. Validar permisos
+    if (req.user.role === "empleado" && req.user.id !== id) {
+      // ❌ Empleado solo puede ver su propio perfil
+      return res.status(403).json({ message: "Acceso denegado" });
     }
 
-    res.json(user);
+    if (
+      req.user.role === "consultorEmpresa" &&
+      user.companyRef &&
+      user.companyRef._id.toString() !== req.user.companyRef.toString()
+    ) {
+      // ❌ Consultor solo puede ver usuarios de su empresa
+      return res.status(403).json({ message: "Acceso denegado" });
+    }
+
+    // 4. Preparar respuesta uniforme
+    const formattedUser = {
+      id: user._id,
+      username: user.username,
+      email: user.email,
+      role: user.role,
+      company: user.companyRef
+        ? { id: user.companyRef._id, name: user.companyRef.name }
+        : null,
+      needsPasswordChange: user.needsPasswordChange,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    };
+
+    // 5. Devolver resultado
+    res.json(formattedUser);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("❌ Error en viewRegister:", error);
+    res.status(500).json({ message: "Error al obtener el registro" });
   }
 };
 
@@ -533,62 +555,109 @@ export const viewRegister = async (req, res) => {
 // 3. Busca el usuario en la base de datos.
 // 4. Actualiza los campos permitidos según el rol.
 // 5. Guarda el usuario y responde con los datos actualizados.
+
 export const updateRegisters = async (req, res) => {
   const { id } = req.params;
-  const { username, email, password, role } = req.body;
+  const { username, email, password, role, companyRef } = req.body;
 
   try {
-    // 2. Verificar permisos
+    // 1️⃣ Verificar que el usuario esté autenticado
+    if (!req.user) {
+      return res.status(401).json({ message: "Usuario no autenticado" });
+    }
+
+    // 2️⃣ Buscar el usuario a actualizar
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ message: "Usuario no encontrado" });
+    }
+
+    // 3️⃣ Permisos básicos: empleado solo puede actualizar su perfil
     if (req.user.role === "empleado" && req.user.id !== id) {
       return res
         .status(403)
         .json({ message: "Solo puede actualizar su propio perfil" });
     }
 
-    const user = await User.findById(id);
-    if (!user) {
-      return res.status(404).json({ message: "Usuario no encontrado" });
-    }
-
-    // Verificar que consultor solo actualice usuarios de su empresa
+    // 4️⃣ Consultor solo puede actualizar usuarios de su empresa
     if (req.user.role === "consultorEmpresa") {
+      const userHasCompany = user.companyRef
+        ? user.companyRef.toString()
+        : null;
+      const editorHasCompany = req.user.companyRef
+        ? req.user.companyRef.toString()
+        : null;
+
       if (
-        user.companyRef &&
-        user.companyRef.toString() !== req.user.companyRef.toString() &&
+        userHasCompany &&
+        editorHasCompany &&
+        userHasCompany !== editorHasCompany &&
         user._id.toString() !== req.user.id
       ) {
         return res.status(403).json({ message: "Acceso denegado" });
       }
     }
 
-    // 4. Actualizar campos según permisos
+    // 5️⃣ Actualizar campos editables
     if (username) user.username = username;
     if (email) user.email = email;
+
     if (password) {
+      if (typeof password !== "string" || password.length < 6) {
+        return res
+          .status(400)
+          .json({ message: "La contraseña debe tener al menos 6 caracteres" });
+      }
       const passwordHash = await bcrypt.hash(password, 10);
       user.password = passwordHash;
+
       if (user.role === "empleado") {
         user.defaultPasswordSet = true;
       }
     }
 
-    // Solo admin puede cambiar roles
+    // 6️⃣ Solo admin puede cambiar roles
     if (role && req.user.role === "admin") {
+      if (req.user.id === id && role !== "admin") {
+        return res.status(400).json({
+          message: "No puedes quitarte a ti mismo el rol de administrador",
+        });
+      }
       user.role = role;
     }
 
-    const updatedUser = await user.save();
-    res.json({
-      id: updatedUser._id,
-      username: updatedUser.username,
-      email: updatedUser.email,
-      role: updatedUser.role,
-      defaultPasswordSet: updatedUser.defaultPasswordSet,
-      createdAt: updatedUser.createdAt,
-      updatedAt: updatedUser.updatedAt,
-    });
+    // 7️⃣ Actualizar companyRef si aplica y no es admin
+    if (companyRef && req.user.role !== "admin") {
+      user.companyRef = companyRef;
+    }
+
+    // 8️⃣ Guardar cambios y capturar errores de validación de Mongoose
+    try {
+      const updatedUser = await user.save();
+      return res.json({
+        id: updatedUser._id,
+        username: updatedUser.username,
+        email: updatedUser.email,
+        role: updatedUser.role,
+        companyRef: updatedUser.companyRef,
+        defaultPasswordSet: updatedUser.defaultPasswordSet,
+        createdAt: updatedUser.createdAt,
+        updatedAt: updatedUser.updatedAt,
+      });
+    } catch (mongooseError) {
+      // Validaciones de esquema fallidas
+      return res.status(400).json({
+        message: "Error de validación al actualizar usuario",
+        errors: mongooseError.errors || mongooseError.message,
+      });
+    }
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Error en updateRegisters:", error);
+    return res.status(500).json({
+      message: "Error interno al actualizar usuario",
+      error: error.message,
+      stack: error.stack,
+    });
   }
 };
 

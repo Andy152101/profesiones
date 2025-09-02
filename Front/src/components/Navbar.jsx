@@ -10,10 +10,10 @@ function Navbar() {
   const linksByRole = {
     admin: [
       { to: "/VerRegister", label: "Usuarios" },
-      { to: "/PowerBi", label: "Gráficos" },
-      { to: "/create-company", label: "Empresas" },
+      { to: "/companiesPage", label: "Empresas" },
       { to: "/people", label: "Registro" },
       { to: "/tests", label: "Pruebas" },
+      { to: "/PowerBi", label: "Gráficos" },
     ],
     empleado: [
       { to: "/people", label: "Registro" },
