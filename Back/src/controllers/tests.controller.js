@@ -1,6 +1,6 @@
 // Importa el modelo de Tests para interactuar con la base de datos
 import Tests from "../models/tests.models.js";
-
+import Company from "../models/company.model.js";
 // Función para manejar errores y devolver un objeto de respuesta con el status y mensaje
 const errorHandler = (err) => {
   console.error(err); // Para ver el error en la consola
@@ -17,8 +17,20 @@ const errorHandler = (err) => {
 // Se utiliza un catch para capturar cualquier error que ocurra en la función y se devuelve un objeto de respuesta con el status y mensaje de error
 export const getTests = async (req, res) => {
   try {
-    let query = req.query || {};
-    const result = await Tests.find(query);
+    const { role, companyRef, peopleRef } = req.user; // del token
+    let filter = {};
+
+    if (role === "admin") {
+      filter = req.query || {};
+    } else if (role === "consultorEmpresa") {
+      filter = { company: companyRef, ...(req.query || {}) };
+    } else if (role === "empleado") {
+      filter = { user: peopleRef, ...(req.query || {}) };
+    }
+
+    const result = await Tests.find(filter)
+      .populate("company", "name")
+      .populate("user", "names docnumber email");
 
     return res.status(200).json(result);
   } catch (err) {
@@ -33,13 +45,26 @@ export const getTests = async (req, res) => {
 // Se guarda el nuevo test en la base de datos y se devuelve un objeto de respuesta con el status y mensaje de éxito
 // Si ocurre un error, se devuelve un objeto de respuesta con el status y mensaje de error
 // Se utiliza un catch para capturar cualquier error que ocurra en la función y se devuelve un objeto de respuesta con el status y mensaje de error
+
 export const createTests = async (req, res) => {
   try {
-    const item = new Tests(req.body);
+    let { company, ...rest } = req.body;
+
+    // Si company es un string que no parece un ObjectId, busca por nombre
+    if (company && !company.match(/^[0-9a-fA-F]{24}$/)) {
+      const companyDoc = await Company.findOne({ name: company });
+      if (!companyDoc) {
+        return res.status(400).json({ message: "Empresa no encontrada" });
+      }
+      company = companyDoc._id;
+    }
+
+    const item = new Tests({ ...rest, company });
     const result = await item.save();
-    return res.status(200).json(result);
+
+    return res.status(201).json(result);
   } catch (err) {
-    console.error("Tests creation failed: " + err);
+    console.error("Tests creation failed:", err);
     const { status, message } = errorHandler(err);
     res.status(status).json({ message, entity: "Tests" });
   }
@@ -56,10 +81,30 @@ export const createTests = async (req, res) => {
 export const getTest = async (req, res) => {
   try {
     const { id } = req.params;
+    const { role, companyRef, peopleRef } = req.user;
+
     if (!id) return res.status(400).json({ message: "ID is required" });
-    const result = await Tests.findById(id);
-    if (!result) return res.status(404).json({ message: "Test not found" });
-    return res.status(200).json(result);
+
+    const test = await Tests.findById(id)
+      .populate("company", "name")
+      .populate("user", "names docnumber email");
+
+    if (!test) return res.status(404).json({ message: "Test not found" });
+
+    // 🔒 Validar acceso según rol
+    if (
+      role !== "admin" &&
+      !(
+        (role === "consultorEmpresa" &&
+          test.company.toString() === companyRef.toString()) ||
+        (role === "empleado" &&
+          test.user._id.toString() === peopleRef.toString())
+      )
+    ) {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+
+    return res.status(200).json(test);
   } catch (err) {
     console.error("Tests getById failed: " + err);
     const { status, message } = errorHandler(err);
@@ -79,9 +124,23 @@ export const getTest = async (req, res) => {
 export const updateTest = async (req, res) => {
   try {
     const { id } = req.params;
-    const updatedTest = await Tests.findByIdAndUpdate(id, req.body, {
-      new: true,
-    });
+    let { company, ...rest } = req.body;
+
+    // si viene nombre en lugar de ObjectId, conviértelo
+    if (company && !company.match(/^[0-9a-fA-F]{24}$/)) {
+      const companyDoc = await Company.findOne({ name: company });
+      if (!companyDoc) {
+        return res.status(400).json({ message: "Empresa no encontrada" });
+      }
+      company = companyDoc._id;
+    }
+
+    const updatedTest = await Tests.findByIdAndUpdate(
+      id,
+      { ...rest, company },
+      { new: true }
+    ).populate("company", "name");
+
     if (!updatedTest) {
       return res.status(404).send("Test not found");
     }

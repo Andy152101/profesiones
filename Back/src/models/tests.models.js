@@ -26,8 +26,9 @@ const testsSchema = new mongoose.Schema(
     },
     // Empresa donde trabaja
     company: {
-      type: String,
-      default: "",
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Company",
+      required: true,
     },
     // mano dominante
     dominanthand: {

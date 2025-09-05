@@ -40,7 +40,12 @@ const peopleSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    //empresa donde trabaja la persona
+    //empresa donde trabaja la persona (referencia a Company)
+    company: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Company",
+      required: true,
+    },
 
     //tiempo de trabajo en la empresa
     companytime: {

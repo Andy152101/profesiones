@@ -1,24 +1,24 @@
-import * as XLSX from 'xlsx';
+import * as XLSX from "xlsx";
 
 function exportToExcel(peoples) {
   // Mapeamos los datos de `peoples` para que coincidan con los campos del esquema
   const worksheet = XLSX.utils.json_to_sheet(
     peoples.map((person) => ({
-      "Nombres": person.names,
+      Nombres: person.names,
       "Tipo de documento": person.doctype,
       "Número de documento": person.docnumber,
       "Fecha de nacimiento": person.birthdate,
-      "Sexo": person.sex,
-      "Teléfono": person.phone,
+      Sexo: person.sex,
+      Teléfono: person.phone,
       "Correo electrónico": person.email,
-      "Empresa": person.company,
+      Empresa: person.company?.name || "-", // 👈 muestra el nombre o un guion,
       "Tiempo en la empresa": person.companytime,
       "Nivel académico": person.academiclevel,
       "Fecha de graduación": person.graduationdate,
       "Mano dominante": person.dominanthand,
-      "Dirección": person.address,
-      "Barrio": person.neighborhood,
-      "Municipio": person.municipality,
+      Dirección: person.address,
+      Barrio: person.neighborhood,
+      Municipio: person.municipality,
     }))
   );
 

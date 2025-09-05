@@ -18,7 +18,8 @@ import TestsFormPage from "./pages/TestsFormPage";
 import EditTestPage from "./pages/EditTestPage";
 import EditPeoplePage from "./pages/EditPeoplePage";
 import TestsPage from "./pages/TestsPage";
-import TestDetail from "./pages/TextDetail";
+import TestEmpresa from "./pages/TextEmpresa";
+import TestEmpleado from "./pages/TextEmpleado";
 import GraficaPowerBi from "./pages/Excel y Graficos/GraficoPowerBi";
 
 // Nuevas páginas del sistema mejorado
@@ -82,7 +83,14 @@ function App() {
                   {/* Gestión de tests */}
                   <Route path="/tests" element={<TestsPage />} />
                   <Route path="/tests/:id" element={<EditTestPage />} />
-                  <Route path="/tests/:id/detail" element={<TestDetail />} />
+                  <Route
+                    path="/tests/:id/detailEmpresa"
+                    element={<TestEmpresa />}
+                  />
+                  <Route
+                    path="/tests/:id/detailEmpleado"
+                    element={<TestEmpleado />}
+                  />
                   <Route path="/add-tests" element={<TestsFormPage />} />
                   {/* Perfil del usuario */}
                   <Route path="/profile" element={<ProfilePage />} />

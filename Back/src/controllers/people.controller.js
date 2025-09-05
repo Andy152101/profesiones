@@ -1,5 +1,7 @@
 // Importa el modelo de People para interactuar con la base de datos de personas
 import People from "../models/people.models.js";
+import User from "../models/user.model.js";
+import bcrypt from "bcryptjs";
 
 // Función para manejar errores y devolver un objeto estándar
 const errorHandler = (error) => {
@@ -22,25 +24,38 @@ const errorHandler = (error) => {
 };
 
 //obtiene todas las personas segun los parametos de consulta
+// obtiene todas las personas según los parámetros de consulta
 export const getPeoples = async (req, res) => {
   try {
-    let query = req.query || {};
-    const result = await People.find(query);
+    const { role, companyRef, id } = req.user; // 👈 vienen del token
+    let filter = {};
+
+    if (role === "admin") {
+      // Admin ve todo
+      filter = req.query || {};
+    } else if (role === "consultorEmpresa") {
+      // Consultor ve todas las personas de su empresa
+      filter = { company: companyRef, ...(req.query || {}) };
+    } else if (role === "empleado") {
+      filter = { _id: req.user.peopleRef };
+    }
+
+    const result = await People.find(filter).populate("company", "name").exec();
+
     return res.status(200).json(result);
   } catch (err) {
     console.error("People getAll failed: " + err);
-    const { status, message } = errorHandler(err);
-    res.status(status).json({ message, entity: "People" });
+    res.status(500).json({ message: err.message, entity: "People" });
   }
 };
+
 // Crea una nueva persona, validando que el número de cédula y el correo sean únicos
 // y que el correo sea único.
 export const createPeople = async (req, res) => {
   try {
-    console.log("Request body:", req.body); // Registra el cuerpo de la solicitud
-    const { docnumber, email } = req.body;
+    const { docnumber, email, company } = req.body;
 
-    // Verifica si el número de cédula ya existe
+    // 🔎 Validaciones
     const existingDocNumber = await People.findOne({ docnumber });
     if (existingDocNumber) {
       return res
@@ -48,7 +63,6 @@ export const createPeople = async (req, res) => {
         .json({ error: `Número de cédula '${docnumber}' ya existe` });
     }
 
-    // Verifica si el correo electrónico ya existe
     const existingEmail = await People.findOne({ email });
     if (existingEmail) {
       return res
@@ -56,20 +70,63 @@ export const createPeople = async (req, res) => {
         .json({ error: `Correo electrónico '${email}' ya existe` });
     }
 
-    // Si no hay duplicados, crea la nueva persona
+    // 1️⃣ Crear persona
     const newPerson = new People(req.body);
     const savedPerson = await newPerson.save();
-    return res.status(201).json(savedPerson); // Código 201 para creación exitosa
+
+    // 2️⃣ Crear usuario asociado
+    const hashedPassword = await bcrypt.hash(docnumber, 10); // contraseña inicial = cédula
+    const newUser = new User({
+      username: `emp_${docnumber}`, // o el mismo email si prefieres
+      email,
+      password: hashedPassword,
+      role: "empleado", // 👈 puedes cambiarlo según el caso
+      companyRef: company,
+      peopleRef: savedPerson._id,
+      defaultPasswordSet: true, // para forzar cambio de clave al inicio si quieres
+    });
+
+    await newUser.save();
+
+    // 3️⃣ Responder con ambos
+    return res.status(201).json({
+      message: "Persona y usuario creados exitosamente",
+      person: savedPerson,
+      user: newUser,
+    });
   } catch (error) {
     console.error("Error creando persona:", error);
     return res.status(500).json({ error: "Error desconocido" });
   }
 };
+
 // Obtiene una persona específica por su ID
 export const getPeople = async (req, res) => {
   try {
     const { id } = req.params;
-    const result = await People.findById(id);
+    const { role, peopleRef, companyRef } = req.user;
+
+    let result;
+
+    if (role === "admin") {
+      // 🔹 Admin puede ver a cualquiera
+      result = await People.findById(id);
+    } else if (role === "consultorEmpresa") {
+      // 🔹 Consultor solo puede ver personas de su empresa
+      result = await People.findOne({ _id: id, company: companyRef });
+    } else if (role === "empleado") {
+      // 🔹 Empleado solo puede ver su propio registro (ignora el :id y usa su peopleRef)
+      if (peopleRef.toString() !== id) {
+        return res
+          .status(403)
+          .json({ message: "No tienes permiso para ver este registro" });
+      }
+      result = await People.findById(peopleRef);
+    }
+
+    if (!result) {
+      return res.status(404).json({ message: "Persona no encontrada" });
+    }
 
     return res.status(200).json(result);
   } catch (err) {
@@ -117,7 +174,10 @@ export const updatePeople = async (req, res) => {
 export const getPeopleByDocNumber = async (req, res) => {
   try {
     const { docNumber } = req.params;
-    const result = await People.findOne({ docnumber: docNumber });
+    const result = await People.findOne({ docnumber: docNumber })
+      .populate("company", "name")
+      .exec();
+
     if (!result) {
       return res.status(404).json({ message: "Persona no encontrada" });
     }

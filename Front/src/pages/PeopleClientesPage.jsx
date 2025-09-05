@@ -18,7 +18,6 @@ const PeopleClientePage = () => {
 
   function createEmptyForm() {
     return {
-      username: "",
       names: "",
       doctype: "",
       docnumber: "",
@@ -37,7 +36,10 @@ const PeopleClientePage = () => {
     };
   }
 
-  const [form, setForm] = useState(createEmptyForm());
+  const [form, setForm] = useState({
+    ...createEmptyForm(),
+    companyAccessCode: accessCode, // aseguramos que solo este campo venga cargado
+  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -76,7 +78,6 @@ const PeopleClientePage = () => {
     }
     // Construir payload como lo espera el backend
     const payload = {
-      username: form.username,
       email: form.email,
       password: form.password,
       companyAccessCode: accessCode, // viene de location.state
@@ -110,6 +111,7 @@ const PeopleClientePage = () => {
     <div className="flex items-center justify-center my-2 px-4">
       <div className="bg-ester max-w-2xl w-full p-6 md:p-10 rounded-md">
         <form
+          autoComplete="off"
           onSubmit={handleSubmit}
           className="grid grid-cols-1 sm:grid-cols-2 gap-4"
         >
@@ -135,17 +137,6 @@ const PeopleClientePage = () => {
             {/* Campo oculto para enviar el companyId al backend */}
             <input type="hidden" name="companyId" value={form.companyId} />
           </div>
-          <div className="col-span-2">
-            <h2 className="text-white">usuario</h2>
-            <input
-              name="username"
-              value={form.username}
-              onChange={handleChange}
-              className="w-full bg-white text-black px-4 py-2 rounded-md my-2 uppercase"
-              placeholder="NOMBRE COMPLETO"
-              required
-            />
-          </div>
 
           <div className="col-span-2">
             <h2 className="text-white">Nombre Completo</h2>
@@ -156,6 +147,33 @@ const PeopleClientePage = () => {
               className="w-full bg-white text-black px-4 py-2 rounded-md my-2 uppercase"
               placeholder="NOMBRE COMPLETO"
               required
+            />
+          </div>
+          <div>
+            <h2 className="text-white">Correo Electrónico</h2>
+            <input
+              name="email"
+              value={form.email}
+              onChange={handleChange}
+              className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
+              placeholder="CORREO ELECTRÓNICO"
+              required
+              autoComplete="new-email"
+              pattern="[^@\s]+@[^@\s]+\.[^@\s]+" // Valida que contenga un @
+              title="Debe ser un correo electrónico válido"
+            />
+          </div>
+          <div>
+            <h2 className="text-white">Contraseña</h2>
+            <input
+              type="password"
+              name="password"
+              value={form.password}
+              onChange={handleChange}
+              className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
+              placeholder="INGRESE UNA CONTRASEÑA"
+              required
+              autoComplete="new-password"
             />
           </div>
           <div>
@@ -212,6 +230,7 @@ const PeopleClientePage = () => {
               <option value="No binario">No binario</option>
             </select>
           </div>
+
           <div>
             <h2 className="text-white">Número Celular</h2>
             <input
@@ -226,19 +245,7 @@ const PeopleClientePage = () => {
               title="El número de teléfono debe tener 10 dígitos"
             />
           </div>
-          <div>
-            <h2 className="text-white">Correo Electrónico</h2>
-            <input
-              name="email"
-              value={form.email}
-              onChange={handleChange}
-              className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
-              placeholder="CORREO ELECTRÓNICO"
-              required
-              pattern="[^@\s]+@[^@\s]+\.[^@\s]+" // Valida que contenga un @
-              title="Debe ser un correo electrónico válido"
-            />
-          </div>
+
           <div>
             <h2 className="text-white">Tiempo en la Compañía</h2>
             <input
@@ -358,18 +365,6 @@ const PeopleClientePage = () => {
               <option value="Villamaría">Villamaría</option>
               <option value="Viterbo">Viterbo</option>
             </select>
-          </div>
-          <div>
-            <h2 className="text-white">Contraseña</h2>
-            <input
-              type="password"
-              name="password"
-              value={form.password}
-              onChange={handleChange}
-              className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
-              placeholder="INGRESE UNA CONTRASEÑA"
-              required
-            />
           </div>
 
           {formError && (

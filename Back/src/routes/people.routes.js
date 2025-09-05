@@ -14,10 +14,10 @@ import { authRequierd } from "../middlewares/validateToken.js";
 const router = Router();
 
 // Obtiene todas las personas (admin y editor)
-router.get("/people", getPeoples);
+router.get("/people", authRequierd, getPeoples);
 
 // Obtiene una persona por ID (admin y editor)
-router.get("/people/:id", getPeople);
+router.get("/people/:id", authRequierd, getPeople);
 
 // Crea una nueva persona (solo admin)
 router.post("/people", createPeople);

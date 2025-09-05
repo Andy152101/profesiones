@@ -46,19 +46,20 @@ export const AuthProvider = ({ children }) => {
   const [pendingCompanies, setPendingCompanies] = useState([]);
   const [selectedCompany, setSelectedCompany] = useState(null);
   const [companyStats, setCompanyStats] = useState(null);
-
   const signup = async (user) => {
     try {
       let res;
       if (user.role === "consultorEmpresa") {
-        res = await registerConsultantRequest(user); // endpoint especial para consultores
+        res = await registerConsultantRequest(user); // endpoint especial
       } else {
-        res = await registerRequest(user); // endpoint general para admins y empleados
+        res = await registerRequest(user); // endpoint general
       }
-      setUser(res.data);
-      setIsAuthenticated(true);
+
+      // ⚠ No actualizar setUser ni setIsAuthenticated
+      return res.data; // devolvemos el usuario creado para cualquier mensaje
     } catch (error) {
       setErrors(error.response?.data || ["Error al registrarse."]);
+      throw error;
     }
   };
 

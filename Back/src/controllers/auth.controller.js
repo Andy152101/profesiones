@@ -17,19 +17,23 @@ import mongoose from "mongoose";
 // 6. Devuelve los datos del usuario y el token en una cookie.
 // 7. Si ocurre un error, responde con 500 y mensaje de error.
 export const register = async (req, res) => {
-  const { username, email, password, role } = req.body;
+  const { email, password, role } = req.body;
   try {
     // 2. Verifica si el email ya está registrado
     const userFound = await User.findOne({ email });
     if (userFound) return res.status(400).json(["Usuario Existente"]);
     // 4. Hashea la contraseña y crea el usuario
     const passwordHash = await bcrypt.hash(password, 10);
+    // Autogenerar username (ejemplo: email antes del @)
+    const generatedUsername = email.split("@")[0] + "_" + Date.now();
+
     const newUser = new User({
-      username,
+      username: generatedUsername,
       email,
       password: passwordHash,
-      role, // Agregar el rol aquí
+      role,
     });
+
     // 5. Guarda el usuario y genera el token
     const userSaved = await newUser.save();
     const token = await createAccessToken({
@@ -63,37 +67,37 @@ export const register = async (req, res) => {
 // 5. Crea el usuario asociado con contraseña temporal
 // 6. Responde con los datos del usuario y contraseña temporal
 export const registerEmployee = async (req, res) => {
-  const { username, email, companyAccessCode, peopleData, createdByAdmin } =
+  const { email, companyAccessCode, companyRef, peopleData, password } =
     req.body;
 
   try {
-    // 2. Validar código de acceso de empresa
-    console.log(
-      "Valor recibido en companyAccessCode:",
-      `"${companyAccessCode}"`,
-      "Longitud:",
-      companyAccessCode.length
-    );
-    console.log("Body completo recibido:", req.body);
+    let company;
 
-    const company = await Company.findOne({
-      companyAccessCode,
-      isValidated: true,
-    });
-
-    if (!company) {
-      return res.status(400).json({
-        message: "Código de acceso inválido o empresa no aprobada",
+    // 🔹 Si el que crea es admin → usa companyRef
+    if (req.user?.role === "admin" && companyRef) {
+      company = await Company.findOne({ _id: companyRef, isValidated: true });
+    }
+    // 🔹 Si es auto-registro (empleado) → usa companyAccessCode
+    else if (companyAccessCode) {
+      company = await Company.findOne({
+        companyAccessCode,
+        isValidated: true,
       });
     }
 
-    // 3. Verificar si el email ya está registrado
+    if (!company) {
+      return res.status(400).json({
+        message: "Empresa inválida o no aprobada",
+      });
+    }
+
+    // 1️⃣ Verificar si el email ya está registrado
     const userFound = await User.findOne({ email });
     if (userFound) {
       return res.status(400).json({ message: "El email ya está registrado" });
     }
 
-    // Verificar si el documento ya existe
+    // 2️⃣ Verificar si el documento ya existe en People
     const peopleFound = await People.findOne({
       docnumber: peopleData.docnumber,
     });
@@ -103,34 +107,46 @@ export const registerEmployee = async (req, res) => {
         .json({ message: "El número de documento ya está registrado" });
     }
 
-    // 4. Crear registro en People
+    // 3️⃣ Crear registro en People
     const newPeople = new People({
       ...peopleData,
-      company: company.name, // Asegurar que el nombre de la empresa sea correcto
+      company: company._id,
     });
-
     const peopleSaved = await newPeople.save();
 
-    // 5. Usar la contraseña ingresada por el empleado
-    if (!req.body.password) {
-      return res.status(400).json({ message: "La contraseña es requerida" });
+    // 4️⃣ Manejar contraseña
+    let finalPassword;
+    if (req.user?.role === "admin") {
+      // 🔹 Si es admin → contraseña por defecto
+      finalPassword = "123456";
+    } else {
+      // 🔹 Si es empleado → debe enviar contraseña
+      if (!password) {
+        return res.status(400).json({ message: "La contraseña es requerida" });
+      }
+      finalPassword = password;
     }
-    const passwordHash = await bcrypt.hash(req.body.password, 10);
+    const passwordHash = await bcrypt.hash(finalPassword, 10);
 
-    // Crear usuario asociado
+    // 5️⃣ Generar username basado en doc o email
+    const generatedUsername = peopleSaved.docnumber
+      ? `emp_${peopleSaved.docnumber}`
+      : email.split("@")[0] + "_" + Date.now();
+
+    // 6️⃣ Crear usuario asociado
     const newUser = new User({
-      username,
+      username: generatedUsername,
       email,
       password: passwordHash,
       role: "empleado",
       companyRef: company._id,
       peopleRef: peopleSaved._id,
-      defaultPasswordSet: false,
+      defaultPasswordSet: req.user?.role === "admin", // 🔹 Marcamos que viene con default
     });
 
     const userSaved = await newUser.save();
 
-    // 6. Responder con datos del usuario
+    // 7️⃣ Responder
     res.status(201).json({
       message: "Empleado registrado exitosamente",
       user: {
@@ -138,7 +154,11 @@ export const registerEmployee = async (req, res) => {
         username: userSaved.username,
         email: userSaved.email,
         role: userSaved.role,
-        companyRef: userSaved.companyRef,
+        companyRef: {
+          // 👈 Aquí ya no es solo un ID
+          id: company._id, // ID de la empresa
+          name: company.name, // Nombre de la empresa
+        },
       },
       company: {
         name: company.name,
@@ -146,6 +166,7 @@ export const registerEmployee = async (req, res) => {
       },
     });
   } catch (error) {
+    console.error("❌ Error en registerEmployee:", error);
     res.status(500).json({ message: error.message });
   }
 };
@@ -177,7 +198,7 @@ export const validateAccessCode = async (req, res) => {
 // 4. Crea el usuario consultor
 // 5. Responde con los datos del usuario
 export const registerConsultant = async (req, res) => {
-  const { username, email, password, companyRef } = req.body;
+  const { email, password, companyRef } = req.body;
   if (!companyRef) {
     return res.status(400).json({ message: "companyRef es requerido" });
   }
@@ -203,13 +224,15 @@ export const registerConsultant = async (req, res) => {
     // 4. Crear usuario consultor
     const password = req.body.password || "123456";
     const passwordHash = await bcrypt.hash(password, 10);
+    const generatedUsername = `${email.split("@")[0]}_consultor_${Date.now()}`;
+
     const newUser = new User({
-      username,
+      username: generatedUsername,
       email,
       password: passwordHash,
       role: "consultorEmpresa",
       companyRef: company._id,
-      defaultPasswordSet: true, // Los consultores no necesitan cambiar contraseña
+      defaultPasswordSet: true,
     });
 
     const userSaved = await newUser.save();
