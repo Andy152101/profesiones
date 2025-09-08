@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { useTests } from '../context/TestsContext';
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useTests } from "../context/TestsContext";
 
 const EditTestPage = () => {
   const { id } = useParams();
@@ -59,7 +59,7 @@ const EditTestPage = () => {
     wireGameError: "",
     wireGameLevel: "",
     visualAcuity: "",
-    visualAcuityLevel: ""
+    visualAcuityLevel: "",
   });
 
   useEffect(() => {
@@ -102,7 +102,6 @@ const EditTestPage = () => {
     return "NO APLICA";
   };
 
-
   useEffect(() => {
     const time1 = parseFloat(form.minedisplacementtime1) || 0;
     const time2 = parseFloat(form.minedisplacementtime2) || 0;
@@ -123,7 +122,6 @@ const EditTestPage = () => {
     return "NO APLICA";
   };
 
-
   useEffect(() => {
     // Si mineobservations está vacío o no es un número válido, dejamos el valor como "NO APLICA"
     if (!form.mineobservations || isNaN(form.mineobservations)) {
@@ -133,7 +131,7 @@ const EditTestPage = () => {
       }));
       return;
     }
-  
+
     // Si hay un valor válido en mineobservations, calculamos el valor de purdedominanthand
     const time1 = parseFloat(form.mineobservations);
     const total = time1.toString();
@@ -142,7 +140,7 @@ const EditTestPage = () => {
       purdedominanthand: getPurdeminanthad(total),
     }));
   }, [form.mineobservations]);
-  
+
   const getPurdeminanthad = (total) => {
     if (total <= 16) return "MUY BAJO";
     if (total <= 17) return "BAJO";
@@ -155,7 +153,7 @@ const EditTestPage = () => {
   useEffect(() => {
     // Verificamos si purdedominanthandscale tiene un valor válido
     const time1 = parseFloat(form.purdedominanthandscale);
-    
+
     if (isNaN(time1) || form.purdedominanthandscale === "") {
       // Si no es un número válido o está vacío, lo dejamos en "NO APLICA"
       setForm((prevForm) => ({
@@ -171,7 +169,7 @@ const EditTestPage = () => {
       }));
     }
   }, [form.purdedominanthandscale]);
-  
+
   const getPurdenodominanthand = (total) => {
     if (total <= 14) return "MUY BAJO";
     if (total <= 16) return "BAJO";
@@ -195,7 +193,7 @@ const EditTestPage = () => {
       }));
     }
   }, [form.purdenodominanthandscale]);
-  
+
   const getPurdebothhands = (total) => {
     if (total <= 13) return "MUY BAJO";
     if (total <= 14) return "BAJO";
@@ -219,7 +217,7 @@ const EditTestPage = () => {
       }));
     }
   }, [form.purdebothhandsscale]);
-  
+
   const getPurdeassemble = (total) => {
     if (total <= 37) return "MUY BAJO";
     if (total <= 42) return "BAJO";
@@ -243,7 +241,7 @@ const EditTestPage = () => {
       }));
     }
   }, [form.activityjtest]);
-  
+
   const getActivityjtestscale = (total) => {
     if (total <= 43) return "MUY BAJO";
     if (total <= 50) return "BAJO";
@@ -267,7 +265,7 @@ const EditTestPage = () => {
       }));
     }
   }, [form.activityjtestobservations]);
-  
+
   const getReaction1 = (total) => {
     if (total <= 43) return "MUY BAJO";
     if (total <= 50) return "BAJO";
@@ -276,8 +274,6 @@ const EditTestPage = () => {
     if (total >= 64) return "MUY ALTO";
     return "NO APLICA";
   };
-
-
 
   useEffect(() => {
     const time1 = parseFloat(form.reaction1scale);
@@ -293,7 +289,7 @@ const EditTestPage = () => {
       }));
     }
   }, [form.reaction1scale]);
-  
+
   const getReaction2 = (total) => {
     if (total >= 301) return "NO TERMINO";
     if (total >= 272) return "MUY BAJO";
@@ -327,7 +323,6 @@ const EditTestPage = () => {
     if (total >= 10001) return "MUY ALTO";
     return "NO APLICA";
   };
-
 
   useEffect(() => {
     const time1 = parseFloat(form.ishideuteranopia);
@@ -376,7 +371,6 @@ const EditTestPage = () => {
     if (total >= 15251) return "MUY ALTO";
     return "NO APLICA";
   };
-
 
   useEffect(() => {
     const time1 = parseFloat(form.startime);
@@ -457,7 +451,7 @@ const EditTestPage = () => {
   useEffect(() => {
     const tiempo = parseFloat(form.wireGameTime);
     const errores = parseInt(form.wireGameError, 10);
-    
+
     // Verificamos si los valores son válidos, si no lo son, asignamos "NO APLICA"
     if (isNaN(tiempo) || isNaN(errores)) {
       setForm((prevForm) => ({
@@ -466,15 +460,15 @@ const EditTestPage = () => {
       }));
       return; // salimos de la función si los valores no son válidos
     }
-  
+
     const nivel = calcularNivelWireGame(tiempo, errores);
-  
+
     setForm((prevForm) => ({
       ...prevForm,
       wireGameLevel: nivel,
     }));
   }, [form.wireGameTime, form.wireGameError]);
-  
+
   const calcularNivelWireGame = (tiempo, errores) => {
     if (tiempo <= 36 && (errores === 0 || errores === 1)) {
       return "ALTO";
@@ -485,23 +479,28 @@ const EditTestPage = () => {
     }
     return "NO APLICA"; // Si no se cumplen las condiciones, devolvemos "NO APLICA"
   };
-  
+
   useEffect(() => {
     const fetchTest = async () => {
       try {
         const data = await getTest(id);
-        // Asegúrate de que la fecha esté en el formato correcto
         setForm({
           ...data,
-          date: data.date ? new Date(data.date).toISOString().split('T')[0] : ''
+          date: data.date
+            ? new Date(data.date).toISOString().split("T")[0]
+            : "",
+          // Extraer los valores correctos de los objetos
+          user: data.user?._id || "",
+          names: data.user?.names || "",
+          docnumber: data.user?.docnumber || "",
+          company: data.company?.name || "",
         });
       } catch (error) {
-        console.error('Error fetching test:', error);
+        console.error("Error fetching test:", error);
       }
     };
     fetchTest();
   }, [id, getTest]);
-
   const handleInputChange = (e) => {
     setForm({
       ...form,
@@ -515,311 +514,357 @@ const EditTestPage = () => {
       // Asegúrate de que la fecha esté en el formato correcto al enviar
       const formattedForm = {
         ...form,
-        date: form.date ? form.date : ''  // Mantener la fecha tal cual está, sin conversión
+        date: form.date ? form.date : "", // Mantener la fecha tal cual está, sin conversión
       };
       await updateTest(id, formattedForm);
-      navigate('/tests');
+      navigate("/tests");
     } catch (error) {
-      console.error('Error al actualizar el test:', error);
+      console.error("Error al actualizar el test:", error);
     }
   };
-  
 
   return (
-    <div className='flex items-center justify-center my-2 px-4'>
+    <div className="flex items-center justify-center my-2 px-4">
       <div className="bg-blueSena max-w-6xl w-full p-6 md:p-10 rounded-md">
         <form onSubmit={handleSubmit}>
-          <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4'>
-            <div className='col-span-2'>
-              < h2 className='text-lg font-semibold'>Id Usuario</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4">
+            <div className="col-span-2">
+              <h2 className="text-lg font-semibold">Id Usuario</h2>
               <input
                 type="text"
                 name="user"
                 placeholder="User"
                 value={form.user}
                 readOnly
-                className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
             </div>
-            <div className='col-span-2'>
-              <h2 className='text-lg font-semibold'>Fecha de prueba</h2>
+            <div className="col-span-2">
+              <h2 className="text-lg font-semibold">Fecha de prueba</h2>
               <input
-                type="date" name="date"
-                placeholder="Date" value={form.date}
+                type="date"
+                name="date"
+                placeholder="Date"
+                value={form.date}
                 onChange={handleInputChange}
-                className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
             </div>
-            <hr className='col-span-4 my-4' />
-            <h1 className='col-span-4 text-center text-xl font-bold'>INFORMACION DEL USUARIO</h1>
+            <hr className="col-span-4 my-4" />
+            <h1 className="col-span-4 text-center text-xl font-bold">
+              INFORMACION DEL USUARIO
+            </h1>
 
-            <div className='col-span-1'>
-              < h2 className='text-lg font-semibold'>Nombre</h2>
-              <input type="text"
+            <div className="col-span-1">
+              <h2 className="text-lg font-semibold">Nombre</h2>
+              <input
+                type="text"
                 name="names"
                 placeholder="Nombre"
                 value={form.names}
-                disabled className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                disabled
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
             </div>
-            <div className='col-span-1'>
-              < h2 className='text-lg font-semibold'>Documento</h2>
-              <input type="text"
+            <div className="col-span-1">
+              <h2 className="text-lg font-semibold">Documento</h2>
+              <input
+                type="text"
                 name="docnumber"
                 placeholder="Documento"
                 value={form.docnumber}
-                disabled className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                disabled
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
             </div>
-            <div className='col-span-1'>
-              < h2 className='text-lg font-semibold'>Empresa</h2>
-              <input type="text"
+            <div className="col-span-1">
+              <h2 className="text-lg font-semibold">Empresa</h2>
+              <input
+                type="text"
                 name="company"
                 placeholder="Empresa"
                 value={form.company}
-                disabled className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                disabled
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
             </div>
-            <div className='col-span-1'>
-              < h2 className='text-lg font-semibold'>Mano Dominante</h2>
+            <div className="col-span-1">
+              <h2 className="text-lg font-semibold">Mano Dominante</h2>
               <input
                 type="text"
                 name="dominanthand"
                 placeholder="Mano Dominante"
                 value={form.dominanthand}
-                disabled className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                disabled
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
             </div>
-            <hr className='col-span-4 my-4' />
+            <hr className="col-span-4 my-4" />
 
-            <h1 className='col-span-4 text-center text-xl font-bold'>MINESOTA</h1>
+            <h1 className="col-span-4 text-center text-xl font-bold">
+              MINESOTA
+            </h1>
 
-            <h2 className='col-span-4 text-lg font-semibold'>COLOCACION</h2>
-            <div className='col-span-1'>
+            <h2 className="col-span-4 text-lg font-semibold">COLOCACION</h2>
+            <div className="col-span-1">
               <h2>Intento 1</h2>
-              <input type="text"
+              <input
+                type="text"
                 name="mineplacementtime1"
                 placeholder="Tiempo 1"
                 value={form.mineplacementtime1}
                 onChange={handleInputChange}
-                className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
             </div>
-            <div className='col-span-1'>
+            <div className="col-span-1">
               <h2>Intento 2</h2>
-              <input type="text"
+              <input
+                type="text"
                 name="mineplacementtime2"
                 placeholder="Tiempo 2"
                 value={form.mineplacementtime2}
                 onChange={handleInputChange}
-                className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
             </div>
-            <div className='col-span-1'>
+            <div className="col-span-1">
               <h2>Total</h2>
-              <input type="text"
+              <input
+                type="text"
                 name="mineplacementtotal"
                 placeholder="Total"
                 value={form.mineplacementtotal}
-                readOnly className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                readOnly
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
             </div>
-            <div className='col-span-1'>
+            <div className="col-span-1">
               <h2>Escala</h2>
-              <input type="text"
+              <input
+                type="text"
                 name="mineplacementscale"
                 placeholder="Escala"
                 value={form.mineplacementscale}
-                readOnly className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                readOnly
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
             </div>
 
-            <h2 className='col-span-4 text-lg font-semibold'>ROTACION</h2>
-            <div className='col-span-1'>
+            <h2 className="col-span-4 text-lg font-semibold">ROTACION</h2>
+            <div className="col-span-1">
               <h2>Intento 1</h2>
-              <input type="text"
+              <input
+                type="text"
                 name="minerotationtime1"
                 placeholder="Tiempo 1"
                 value={form.minerotationtime1}
                 onChange={handleInputChange}
-                className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
             </div>
-            <div className='col-span-1'>
+            <div className="col-span-1">
               <h2>Intento 2</h2>
-              <input type="text"
+              <input
+                type="text"
                 name="minerotationtime2"
                 placeholder="Tiempo 2"
                 value={form.minerotationtime2}
                 onChange={handleInputChange}
-                className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
             </div>
-            <div className='col-span-1'>
+            <div className="col-span-1">
               <h2>Total</h2>
-              <input type="text"
+              <input
+                type="text"
                 name="minerotationtotal"
                 placeholder="Total"
                 value={form.minerotationtotal}
-                readOnly className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                readOnly
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
             </div>
-            <div className='col-span-1'>
+            <div className="col-span-1">
               <h2>Escala</h2>
-              <input type="text"
+              <input
+                type="text"
                 name="minerotationscale"
                 placeholder="Escale"
                 value={form.minerotationscale}
-                readOnly className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                readOnly
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
             </div>
 
-            <h2 className='col-span-4 text-lg font-semibold'>DESPLAZAMIENTO</h2>
-            <div className='col-span-1'>
+            <h2 className="col-span-4 text-lg font-semibold">DESPLAZAMIENTO</h2>
+            <div className="col-span-1">
               <h2>Intento 1</h2>
-              <input type="text"
+              <input
+                type="text"
                 name="minedisplacementtime1"
                 placeholder="Tiempo 1"
                 value={form.minedisplacementtime1}
                 onChange={handleInputChange}
-                className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
             </div>
-            <div className='col-span-1'>
+            <div className="col-span-1">
               <h2>Intento 2</h2>
-              <input type="text"
+              <input
+                type="text"
                 name="minedisplacementtime2"
                 placeholder="Tiempo 2"
                 value={form.minedisplacementtime2}
                 onChange={handleInputChange}
-                className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
             </div>
-            <div className='col-span-1'>
+            <div className="col-span-1">
               <h2>Total</h2>
-              <input type="text"
+              <input
+                type="text"
                 name="minedisplacementtotal"
                 placeholder="Total"
                 value={form.minedisplacementtotal}
-                readOnly className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                readOnly
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
             </div>
-            <div className='col-span-1'>
+            <div className="col-span-1">
               <h2>Escala</h2>
-              <input type="text"
+              <input
+                type="text"
                 name="minedisplacementscale"
                 placeholder="Escale"
                 value={form.minedisplacementscale}
-                readOnly className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                readOnly
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
             </div>
 
-            <hr className='col-span-4 my-4' />
+            <hr className="col-span-4 my-4" />
 
-            <h1 className='col-span-4 text-center text-xl font-bold'>PURDUE</h1>
+            <h1 className="col-span-4 text-center text-xl font-bold">PURDUE</h1>
 
-            <h2 className='col-span-2 text-lg font-semibold'>MANO DOMINANTE</h2>
-            <h2 className='col-span-2 text-lg font-semibold'>MANO NO DOMINANTE</h2>
-            <div className='col-span-1'>
+            <h2 className="col-span-2 text-lg font-semibold">MANO DOMINANTE</h2>
+            <h2 className="col-span-2 text-lg font-semibold">
+              MANO NO DOMINANTE
+            </h2>
+            <div className="col-span-1">
               <h2>Numerica</h2>
-              <input type="text"
+              <input
+                type="text"
                 name="mineobservations"
                 placeholder="Numerica"
                 value={form.mineobservations}
                 onChange={handleInputChange}
-                className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
             </div>
-            <div className='col-span-1'>
+            <div className="col-span-1">
               <h2>Escala</h2>
-              <input type="text"
+              <input
+                type="text"
                 name="purdedominanthand"
                 placeholder="Total"
                 value={form.purdedominanthand}
                 onChange={handleInputChange}
-                className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
             </div>
 
-            <div className='col-span-1'>
+            <div className="col-span-1">
               <h2>Numerica</h2>
-              <input type="text"
+              <input
+                type="text"
                 name="purdedominanthandscale"
                 placeholder="Numerica"
                 value={form.purdedominanthandscale}
                 onChange={handleInputChange}
-                className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
             </div>
-            <div className='col-span-1'>
+            <div className="col-span-1">
               <h2>Escala</h2>
-              <input type="text"
+              <input
+                type="text"
                 name="purdenodominanthand"
                 placeholder="Purdue Dominant Hand Total"
                 value={form.purdenodominanthand}
-                readOnly className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                readOnly
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
             </div>
-            <h2 className='col-span-2 text-lg font-semibold'> AMBAS MANO</h2>
-            <h2 className='col-span-2 text-lg font-semibold'>ENSAMBLE</h2>
-            <div className='col-span-1'>
+            <h2 className="col-span-2 text-lg font-semibold"> AMBAS MANO</h2>
+            <h2 className="col-span-2 text-lg font-semibold">ENSAMBLE</h2>
+            <div className="col-span-1">
               <h2>Numerica</h2>
-              <input type="text"
+              <input
+                type="text"
                 name="purdenodominanthandscale"
                 placeholder="Numerica"
                 value={form.purdenodominanthandscale}
                 onChange={handleInputChange}
-                className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
             </div>
-            <div className='col-span-1'>
+            <div className="col-span-1">
               <h2>Escala</h2>
-              <input type="text"
+              <input
+                type="text"
                 name="purdebothhands"
                 placeholder="Purdue Dominant Hand Total"
                 value={form.purdebothhands}
-                readOnly className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                readOnly
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
             </div>
-            <div className='col-span-1'>
+            <div className="col-span-1">
               <h2>Numerica</h2>
-              <input type="text"
+              <input
+                type="text"
                 name="purdebothhandsscale"
                 placeholder="Numerica"
                 value={form.purdebothhandsscale}
                 onChange={handleInputChange}
-                className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
             </div>
-            <div className='col-span-1'>
+            <div className="col-span-1">
               <h2>Escala</h2>
-              <input type="text"
+              <input
+                type="text"
                 name="purdeassemble"
                 placeholder="Purdue Dominant Hand Total"
                 value={form.purdeassemble}
-                readOnly className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                readOnly
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
             </div>
-            <hr className='col-span-4 my-4' />
-            <h1 className='col-span-4 text-center text-xl font-bold'>TEST DE JUICIO DE ACTIVIDAD</h1>
-            <h2 className='col-span-4 text-lg font-semibold'>CON DISTRACTOR</h2>
-            <div className='col-span-2'>
+            <hr className="col-span-4 my-4" />
+            <h1 className="col-span-4 text-center text-xl font-bold">
+              TEST DE JUICIO DE ACTIVIDAD
+            </h1>
+            <h2 className="col-span-4 text-lg font-semibold">CON DISTRACTOR</h2>
+            <div className="col-span-2">
               <h2>Aciertos</h2>
-              <input type="text"
+              <input
+                type="text"
                 name="purdeassemblescale"
                 placeholder="Aciertos"
                 value={form.purdeassemblescale}
                 onChange={handleInputChange}
-                className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
             </div>
-            <div className='col-span-2'>
+            <div className="col-span-2">
               <h2>Escala</h2>
               <select
                 name="purdeobservations"
                 value={form.purdeobservations}
                 onChange={handleInputChange}
-                className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               >
                 <option value="">Selecciona una opción</option>
                 <option value="MUY ALTO">MUY ALTO</option>
@@ -827,133 +872,158 @@ const EditTestPage = () => {
                 <option value="MEDIO">MEDIO</option>
                 <option value="BAJO">BAJO</option>
                 <option value="MUY BAJO">MUY BAJO</option>
-
               </select>
             </div>
-            <hr className='col-span-4 my-4' />
-            <h1 className='col-span-4 text-center text-xl font-bold'>TEST DE REACCION (VISION PERIFERICA)</h1>
-            <h2 className='col-span-2 text-lg font-semibold'>INTENTO 1</h2>
-            <h2 className='col-span-2 text-lg font-semibold'>INTENTO 2</h2>
-            <div className='col-span-1'>
+            <hr className="col-span-4 my-4" />
+            <h1 className="col-span-4 text-center text-xl font-bold">
+              TEST DE REACCION (VISION PERIFERICA)
+            </h1>
+            <h2 className="col-span-2 text-lg font-semibold">INTENTO 1</h2>
+            <h2 className="col-span-2 text-lg font-semibold">INTENTO 2</h2>
+            <div className="col-span-1">
               <h2>Aciertos</h2>
-              <input type="text"
+              <input
+                type="text"
                 name="activityjtest"
                 placeholder="Aciertos"
                 value={form.activityjtest}
                 onChange={handleInputChange}
-                className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
             </div>
-            <div className='col-span-1'>
+            <div className="col-span-1">
               <h2>Escala</h2>
-              <input type="text"
+              <input
+                type="text"
                 name="activityjtestscale"
                 placeholder="Escalas"
                 value={form.activityjtestscale}
-                readOnly className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                readOnly
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
             </div>
-            <div className='col-span-1'>
+            <div className="col-span-1">
               <h2>Aciertos</h2>
-              <input type="text"
+              <input
+                type="text"
                 name="activityjtestobservations"
                 placeholder="Aciertos"
                 value={form.activityjtestobservations}
                 onChange={handleInputChange}
-                className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
             </div>
-            <div className='col-span-1'>
+            <div className="col-span-1">
               <h2>Escala</h2>
-              <input type="text"
+              <input
+                type="text"
                 name="reaction1"
                 placeholder="Escalas"
                 value={form.reaction1}
-                readOnly className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                readOnly
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
             </div>
-            <hr className='col-span-4 my-4' />
-            <h1 className='col-span-4 text-center text-xl font-bold'>TEST DE ESTRELLA</h1>
-            <h2 className='col-span-2 text-lg font-semibold'>TIEMPO(seg)</h2>
-            <h2 className='col-span-2 text-lg font-semibold'>ERRORES(toques)</h2>
-            <div className='col-span-1'>
+            <hr className="col-span-4 my-4" />
+            <h1 className="col-span-4 text-center text-xl font-bold">
+              TEST DE ESTRELLA
+            </h1>
+            <h2 className="col-span-2 text-lg font-semibold">TIEMPO(seg)</h2>
+            <h2 className="col-span-2 text-lg font-semibold">
+              ERRORES(toques)
+            </h2>
+            <div className="col-span-1">
               <h2>Aciertos</h2>
-              <input type="text"
+              <input
+                type="text"
                 name="startime"
                 placeholder="Aciertos"
                 value={form.startime}
                 onChange={handleInputChange}
-                className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
             </div>
-            <div className='col-span-1'>
+            <div className="col-span-1">
               <h2>Escala</h2>
-              <input type="text"
+              <input
+                type="text"
                 name="starTimeOne"
                 placeholder="Escalas"
                 value={form.starTimeOne}
-                readOnly className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                readOnly
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
             </div>
-            <div className='col-span-1'>
+            <div className="col-span-1">
               <h2>Aciertos</h2>
-              <input type="text"
+              <input
+                type="text"
                 name="startoucherrors"
                 placeholder="Aciertos"
                 value={form.startoucherrors}
                 onChange={handleInputChange}
-                className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
             </div>
-            <div className='col-span-1'>
+            <div className="col-span-1">
               <h2>Escala</h2>
-              <input type="text"
+              <input
+                type="text"
                 name="starTouchErrorsOne"
                 placeholder="Escalas"
                 value={form.starTouchErrorsOne}
-                readOnly className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                readOnly
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
             </div>
-            <hr className='col-span-4 my-4' />
-            <h1 className='col-span-4 text-center text-xl font-bold'>WIRE GAME</h1>
-            <div className='col-span-1'>
+            <hr className="col-span-4 my-4" />
+            <h1 className="col-span-4 text-center text-xl font-bold">
+              WIRE GAME
+            </h1>
+            <div className="col-span-1">
               <h2>Tiempo(Seg)</h2>
-              <input type="text"
+              <input
+                type="text"
                 name="wireGameTime"
                 placeholder="Tiempo"
                 value={form.wireGameTime}
                 onChange={handleInputChange}
-                className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
             </div>
-            <div className='col-span-1'>
+            <div className="col-span-1">
               <h2>Errores</h2>
-              <input type="text"
+              <input
+                type="text"
                 name="wireGameError"
                 placeholder="Errores"
                 value={form.wireGameError}
                 onChange={handleInputChange}
-                className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
             </div>
-            <div className='col-span-2'>
+            <div className="col-span-2">
               <h2>Nivel</h2>
-              <input type="text"
+              <input
+                type="text"
                 name="wireGameLevel"
                 placeholder="Nivel"
                 value={form.wireGameLevel}
-                readOnly className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                readOnly
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
             </div>
-            <hr className='col-span-4 my-4' />
-            <h1 className='col-span-4 text-center text-xl font-bold'>AGUDEZA VISUAL</h1>
-            <div className='col-span-2'>
+            <hr className="col-span-4 my-4" />
+            <h1 className="col-span-4 text-center text-xl font-bold">
+              AGUDEZA VISUAL
+            </h1>
+            <div className="col-span-2">
               <h2>Línea de Snellen</h2>
               <select
                 name="visualAcuity"
                 value={form.visualAcuity}
                 onChange={handleInputChange}
-                className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               >
                 <option value="">Selecciona una opción</option>
                 <option value="20/200">20/200</option>
@@ -970,143 +1040,170 @@ const EditTestPage = () => {
               </select>
             </div>
 
-            <div className='col-span-2'>
+            <div className="col-span-2">
               <h2>Escala</h2>
-              <input type="text"
+              <input
+                type="text"
                 name="visualAcuityLevel"
                 placeholder="Escalas"
                 value={form.visualAcuityLevel}
-                readOnly className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                readOnly
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
             </div>
-            <hr className='col-span-4 my-4' />
-            <h1 className='col-span-4 text-center text-xl font-bold'>DEDOS</h1>
-            <h2 className='col-span-4 text-lg font-semibold'>INTENTO 1</h2>
-            <div className='col-span-2'>
+            <hr className="col-span-4 my-4" />
+            <h1 className="col-span-4 text-center text-xl font-bold">DEDOS</h1>
+            <h2 className="col-span-4 text-lg font-semibold">INTENTO 1</h2>
+            <div className="col-span-2">
               <h2>Tiempo</h2>
-              <input type="text"
+              <input
+                type="text"
                 name="reaction1scale"
                 placeholder="Aciertos"
                 value={form.reaction1scale}
                 onChange={handleInputChange}
-                className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
             </div>
-            <div className='col-span-2'>
+            <div className="col-span-2">
               <h2>Nivel</h2>
-              <input type="text"
+              <input
+                type="text"
                 name="reaction2"
                 placeholder="Escalas"
                 value={form.reaction2}
-                readOnly className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                readOnly
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
             </div>
-            <hr className='col-span-4 my-4' />
-            <h1 className='col-span-4 text-center text-xl font-bold'>TEST DE ISHIHARA (DALTONISMO)</h1>
-            <h2 className='col-span-4 text-lg font-semibold'>INTENTO 1</h2>
-            <div className='col-span-1'>
+            <hr className="col-span-4 my-4" />
+            <h1 className="col-span-4 text-center text-xl font-bold">
+              TEST DE ISHIHARA (DALTONISMO)
+            </h1>
+            <h2 className="col-span-4 text-lg font-semibold">INTENTO 1</h2>
+            <div className="col-span-1">
               <h2>% De Vision Normal</h2>
-              <input type="text"
+              <input
+                type="text"
                 name="reaction2scale"
                 placeholder="% De Vision Normal"
                 value={form.reaction2scale}
                 onChange={handleInputChange}
-                className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
-            </div><div className='col-span-1'>
+            </div>
+            <div className="col-span-1">
               <h2>% De Portanopia</h2>
-              <input type="text"
+              <input
+                type="text"
                 name="reactionobservations"
                 placeholder="% De Portanopia"
                 value={form.reactionobservations}
                 onChange={handleInputChange}
-                className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
-            </div><div className='col-span-1'>
+            </div>
+            <div className="col-span-1">
               <h2>% De Deuterapia</h2>
-              <input type="text"
+              <input
+                type="text"
                 name="fingers"
                 placeholder="% De Deuterapia"
                 value={form.fingers}
                 onChange={handleInputChange}
-                className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
-            </div><div className='col-span-1'>
+            </div>
+            <div className="col-span-1">
               <h2>% Total Daltonismo</h2>
-              <input type="text"
+              <input
+                type="text"
                 name="fingersscale"
                 placeholder="% Total Daltonismo"
                 value={form.fingersscale}
                 onChange={handleInputChange}
-                className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
             </div>
-            <hr className='col-span-4 my-4' />
-            <h1 className='col-span-4 text-center text-xl font-bold'>LUMOSITY</h1>
-            <h2 className='col-span-2 text-lg font-semibold'>TREN</h2>
-            <h2 className='col-span-2 text-lg font-semibold'>MEMORIAS DEL MAR</h2>
-            <div className='col-span-1'>
+            <hr className="col-span-4 my-4" />
+            <h1 className="col-span-4 text-center text-xl font-bold">
+              LUMOSITY
+            </h1>
+            <h2 className="col-span-2 text-lg font-semibold">TREN</h2>
+            <h2 className="col-span-2 text-lg font-semibold">
+              MEMORIAS DEL MAR
+            </h2>
+            <div className="col-span-1">
               <h2>Puntos</h2>
-              <input type="text"
+              <input
+                type="text"
                 name="fingersobservations"
                 placeholder="Puntos"
                 value={form.fingersobservations}
                 onChange={handleInputChange}
-                className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
             </div>
-            <div className='col-span-1'>
+            <div className="col-span-1">
               <h2>Nivel</h2>
-              <input type="text"
+              <input
+                type="text"
                 name="ishinormalvision"
                 placeholder="Nivel"
                 value={form.ishinormalvision}
-                readOnly className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                readOnly
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
             </div>
-            <div className='col-span-1'>
+            <div className="col-span-1">
               <h2>Puntos</h2>
-              <input type="text"
+              <input
+                type="text"
                 name="ishideuteranopia"
                 placeholder="Puntos"
                 value={form.ishideuteranopia}
                 onChange={handleInputChange}
-                className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
             </div>
-            <div className='col-span-1'>
+            <div className="col-span-1">
               <h2>Nivel</h2>
-              <input type="text"
+              <input
+                type="text"
                 name="ishiportanopia"
                 placeholder="Nivel"
                 value={form.ishiportanopia}
-                readOnly className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                readOnly
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
             </div>
-            <h2 className='col-span-4 text-lg font-semibold'>AVES</h2>
-            <div className='col-span-2'>
+            <h2 className="col-span-4 text-lg font-semibold">AVES</h2>
+            <div className="col-span-2">
               <h2>Puntos</h2>
-              <input type="text"
+              <input
+                type="text"
                 name="ishidaltonism"
                 placeholder="Puntos"
                 value={form.ishidaltonism}
                 onChange={handleInputChange}
-                className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
             </div>
-            <div className='col-span-2'>
+            <div className="col-span-2">
               <h2>Nivel</h2>
-              <input type="text"
+              <input
+                type="text"
                 name="ishiobservations"
                 placeholder="Nivel"
                 value={form.ishiobservations}
-                readOnly className='w-full bg-white text-black px-4 py-2 rounded-md my-2'
+                readOnly
+                className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />
             </div>
-            <div className='flex justify-center col-span-4'>
+            <div className="flex justify-center col-span-4">
               <button
                 type="submit"
-                className='bg-ester text-white px-4 py-2 rounded-md mt-4'
+                className="bg-ester text-white px-4 py-2 rounded-md mt-4"
               >
                 Guardar Cambios
               </button>

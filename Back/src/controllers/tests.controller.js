@@ -124,30 +124,57 @@ export const getTest = async (req, res) => {
 export const updateTest = async (req, res) => {
   try {
     const { id } = req.params;
+
+    // Validar id del test
+    if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+      return res.status(400).json({ message: "ID inválido" });
+    }
+
     let { company, ...rest } = req.body;
 
-    // si viene nombre en lugar de ObjectId, conviértelo
-    if (company && !company.match(/^[0-9a-fA-F]{24}$/)) {
-      const companyDoc = await Company.findOne({ name: company });
-      if (!companyDoc) {
-        return res.status(400).json({ message: "Empresa no encontrada" });
+    // Validar company
+    if (company) {
+      if (typeof company === "string") {
+        // Si es string, puede ser nombre o id
+        if (!company.match(/^[0-9a-fA-F]{24}$/)) {
+          // No es un ObjectId, buscar por nombre
+          const companyDoc = await Company.findOne({ name: company });
+          if (!companyDoc)
+            return res.status(400).json({ message: "Empresa no encontrada" });
+          company = companyDoc._id;
+        }
+      } else if (typeof company === "object" && company._id) {
+        // Si viene como objeto con _id
+        company = company._id;
+      } else {
+        return res
+          .status(400)
+          .json({ message: "Formato de company no válido" });
       }
-      company = companyDoc._id;
     }
 
-    const updatedTest = await Tests.findByIdAndUpdate(
-      id,
-      { ...rest, company },
-      { new: true }
-    ).populate("company", "name");
+    // Preparar datos de actualización
+    const updateData = { ...rest };
+    if (company) updateData.company = company;
 
-    if (!updatedTest) {
-      return res.status(404).send("Test not found");
-    }
+    // Actualizar test
+    const updatedTest = await Tests.findByIdAndUpdate(id, updateData, {
+      new: true,
+      runValidators: true,
+    })
+      .populate("company", "name")
+      .populate("user", "names docnumber email");
+
+    if (!updatedTest)
+      return res.status(404).json({ message: "Test no encontrado" });
+
     res.status(200).json(updatedTest);
   } catch (error) {
     console.error("Error updating test:", error);
-    res.status(500).send("Server error");
+    res.status(500).json({
+      message: "Error interno al actualizar test",
+      error: error.message,
+    });
   }
 };
 
