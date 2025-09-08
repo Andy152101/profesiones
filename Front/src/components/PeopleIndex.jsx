@@ -71,6 +71,12 @@ function PeopleIndex({ people }) {
       </header>
 
       <div className="flex justify-end mt-4 gap-2">
+        <Link
+          to={`/people/${people._id}`}
+          className="bg-claroSena text-white px-4 py-2 rounded-md"
+        >
+          Editar
+        </Link>
         {userRole === "admin" && (
           <button
             onClick={() => {
@@ -86,14 +92,6 @@ function PeopleIndex({ people }) {
           >
             Eliminar
           </button>
-        )}
-        {(userRole === "admin" || userRole === "editor") && (
-          <Link
-            to={`/people/${people._id}`}
-            className="bg-claroSena text-white px-4 py-2 rounded-md"
-          >
-            Editar
-          </Link>
         )}
       </div>
     </div>

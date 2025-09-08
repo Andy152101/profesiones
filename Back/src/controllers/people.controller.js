@@ -101,6 +101,7 @@ export const createPeople = async (req, res) => {
 };
 
 // Obtiene una persona específica por su ID
+// Obtiene una persona específica por su ID
 export const getPeople = async (req, res) => {
   try {
     const { id } = req.params;
@@ -110,18 +111,21 @@ export const getPeople = async (req, res) => {
 
     if (role === "admin") {
       // 🔹 Admin puede ver a cualquiera
-      result = await People.findById(id);
+      result = await People.findById(id).populate("company", "name");
     } else if (role === "consultorEmpresa") {
       // 🔹 Consultor solo puede ver personas de su empresa
-      result = await People.findOne({ _id: id, company: companyRef });
+      result = await People.findOne({ _id: id, company: companyRef }).populate(
+        "company",
+        "name"
+      );
     } else if (role === "empleado") {
-      // 🔹 Empleado solo puede ver su propio registro (ignora el :id y usa su peopleRef)
+      // 🔹 Empleado solo puede ver su propio registro
       if (peopleRef.toString() !== id) {
         return res
           .status(403)
           .json({ message: "No tienes permiso para ver este registro" });
       }
-      result = await People.findById(peopleRef);
+      result = await People.findById(peopleRef).populate("company", "name");
     }
 
     if (!result) {

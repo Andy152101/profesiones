@@ -46,26 +46,27 @@ function TestsPage() {
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-4">
-        {/* Solo admin puede ver esto */}
-        {user?.role === "admin" && (
-          <div className="flex gap-2">
+        {/* Botones de acciones */}
+        <div className="flex gap-2">
+          {user?.role === "admin" && (
             <Link
               to="/add-tests"
               className="px-4 py-2 bg-blueSena text-white rounded-md"
             >
               Crear Tests
             </Link>
-            <button
-              onClick={() => exportToExcel(tests)}
-              className="px-4 py-2 bg-ester text-white rounded-md"
-            >
-              Descargar Excel
-            </button>
-          </div>
-        )}
+          )}
+
+          <button
+            onClick={() => exportToExcel(tests, user)}
+            className="px-4 py-2 bg-ester text-white rounded-md"
+          >
+            Descargar Excel
+          </button>
+        </div>
 
         {/* El buscador lo ven todos */}
-        <div className="flex items-center gap-2 ml-auto">
+        <div className="flex items-center gap-2">
           <input
             type="text"
             value={searchDocNumber}
