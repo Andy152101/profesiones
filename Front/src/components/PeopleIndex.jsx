@@ -44,7 +44,11 @@ function PeopleIndex({ people }) {
               <td className="p-2 border-t border-gray-600">{people.phone}</td>
               <td className="p-2 border-t border-gray-600">{people.email}</td>
               <td className="p-2 border-t border-gray-600">
-                {people.company?.name || "-"}
+                {people.company
+                  ? `${people.company.name} - ${
+                      people.company.headquarters || "-"
+                    }`
+                  : "-"}
               </td>
               <td className="p-2 border-t border-gray-600">
                 {people.companytime}
@@ -111,6 +115,7 @@ PeopleIndex.propTypes = {
     company: PropTypes.shape({
       _id: PropTypes.string,
       name: PropTypes.string,
+      headquarters: PropTypes.string,
     }),
     companytime: PropTypes.string,
     academiclevel: PropTypes.string,

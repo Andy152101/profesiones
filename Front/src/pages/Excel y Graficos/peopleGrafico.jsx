@@ -11,7 +11,10 @@ function exportToExcel(peoples) {
       Sexo: person.sex,
       Teléfono: person.phone,
       "Correo electrónico": person.email,
-      Empresa: person.company?.name || "-", // 👈 muestra el nombre o un guion,
+      Empresa: person.company
+        ? `${person.company.name} (${person.company.headquarters})`
+        : "-",
+
       "Tiempo en la empresa": person.companytime,
       "Nivel académico": person.academiclevel,
       "Fecha de graduación": person.graduationdate,

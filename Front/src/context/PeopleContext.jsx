@@ -48,13 +48,15 @@ export function PeopleProvider({ children }) {
       const result = await createPeopleRequest(form);
       if (result.error) {
         setError({ formError: result.error });
-        return false;
+        throw new Error(result.error); // ⬅️ Lanzar error
       }
-      setError({}); // Limpia errores previos en caso de éxito
-      return true;
+      setError({});
+      return result; // Retornar los datos
     } catch (error) {
-      setError({ formError: "Error desconocido al crear persona." });
-      return false;
+      const errorMessage =
+        error.response?.data?.message || error.message || "Error desconocido";
+      setError({ formError: errorMessage });
+      throw error; // ⬅️ Re-lanzar el error
     }
   }, []);
 

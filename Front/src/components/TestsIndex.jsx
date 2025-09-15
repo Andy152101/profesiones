@@ -76,7 +76,11 @@ function TestsIndex({ tests }) {
               </td>
               <td className="p-2 border-t border-gray-600">{tests.names}</td>
               <td className="p-2 border-t border-gray-600">
-                {tests.company?.name || "Sin empresa"}
+                {tests.company
+                  ? `${tests.company.name} - ${
+                      tests.company.headquarters || ""
+                    }`
+                  : "Sin empresa"}
               </td>
 
               <td className="p-2 border-t border-gray-600">
@@ -295,6 +299,7 @@ TestsIndex.propTypes = {
     company: PropTypes.shape({
       _id: PropTypes.string,
       name: PropTypes.string,
+      headquarters: PropTypes.string,
     }),
     dominanthand: PropTypes.string,
     mineplacementtime1: PropTypes.string,

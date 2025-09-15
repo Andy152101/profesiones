@@ -1,6 +1,9 @@
 // Importaciones principales de React Router, contextos y páginas
-// React Router: para el manejo de rutas en la SPA
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+// Toastify
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 // Páginas principales de la aplicación
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/Login";
@@ -23,7 +26,6 @@ import TestEmpleado from "./pages/TextEmpleado";
 import GraficaPowerBi from "./pages/Excel y Graficos/GraficoPowerBi";
 
 // Nuevas páginas del sistema mejorado
-//import CompanyRegistrationPage from "./pages/CompanyRegistrationPage";
 import CompaniesPage from "./pages/CompanyPage";
 import CreateCompanyPage from "./pages/CreateCompanyPage";
 import EditCompanyPage from "./pages/CompanyEdit";
@@ -37,81 +39,81 @@ import { TestsProvider } from "./context/TestsContext";
 import { TaskProvider } from "./context/TasksContext";
 import { AuthProvider } from "./context/AuthContext";
 import { PeopleProvider } from "./context/PeopleContext";
+import { CompanyProvider } from "./context/CompanyContext";
 import AccessCodePage from "./pages/AccessCodePage";
 
-// Componente principal de la aplicación.
-// Envuelve toda la app con los contextos de autenticación, tareas, personas y tests.
-// Define la estructura de rutas públicas y protegidas usando React Router.
 function App() {
   return (
-    // Proveedor global de autenticación
     <AuthProvider>
-      {/* Proveedor global de tareas */}
-      <TaskProvider>
-        {/* Proveedor global de personas */}
-        <PeopleProvider>
-          {/* Proveedor global de tests */}
-          <TestsProvider>
-            {/* Configuración de rutas con React Router */}
-            <BrowserRouter>
-              {/* Barra de navegación visible en todas las páginas */}
-              <Navbar />
-              <Routes>
-                {/* Rutas públicas: accesibles sin autenticación */}
-                <Route path="/" element={<HomePage />} />
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/acceso" element={<AccessCodePage />} />
-                <Route path="/add-people" element={<PeopleClientePage />} />
+      <CompanyProvider>
+        <TaskProvider>
+          <PeopleProvider>
+            <TestsProvider>
+              <BrowserRouter>
+                <Navbar />
 
-                {/* Rutas protegidas: requieren autenticación */}
-                <Route element={<ProtectedRoute />}>
-                  {/* Página principal del usuario autenticado */}
-                  <Route path="/home" element={<HomeIndexPage />} />
-                  {/* Registro de usuarios */}
-                  <Route path="/register" element={<RegisterPage />} />
-                  {/* Visualización y edición de registros */}
-                  <Route path="/VerRegister" element={<VerRegister />} />
-                  <Route path="/registers/:id" element={<EditarRegister />} />
-                  {/* Gestión de tareas */}
-                  <Route path="/tasks" element={<TasksPage />} />
-                  <Route path="/add-task" element={<TaskFormPage />} />
-                  <Route path="/tasks/:id" element={<TaskFormPage />} />
-                  {/* Gestión de personas */}
-                  <Route path="/people" element={<PeoplePage />} />
-                  <Route path="/people/:id" element={<EditPeoplePage />} />
-                  <Route path="/add-people2" element={<AddPeopleForm />} />
-                  {/* Gestión de tests */}
-                  <Route path="/tests" element={<TestsPage />} />
-                  <Route path="/tests/:id" element={<EditTestPage />} />
-                  <Route
-                    path="/tests/:id/detailEmpresa"
-                    element={<TestEmpresa />}
-                  />
-                  <Route
-                    path="/tests/:id/detailEmpleado"
-                    element={<TestEmpleado />}
-                  />
-                  <Route path="/add-tests" element={<TestsFormPage />} />
-                  {/* Perfil del usuario */}
-                  <Route path="/profile" element={<ProfilePage />} />
-                  {/* Perfil del usuario y grafica de PowerBI */}
-                  <Route path="/PowerBi" element={<GraficaPowerBi />} />
-                  {/* Nueva página para crear empresas */}
-                  <Route
-                    path="/create-company"
-                    element={<CreateCompanyPage />}
-                  />
-                  <Route path="/companiesPage" element={<CompaniesPage />} />
-                  <Route
-                    path="/companies/:id/edit"
-                    element={<EditCompanyPage />}
-                  />
-                </Route>
-              </Routes>
-            </BrowserRouter>
-          </TestsProvider>
-        </PeopleProvider>
-      </TaskProvider>
+                {/* Contenedor global de Toastify */}
+                <ToastContainer
+                  position="top-right"
+                  autoClose={3000}
+                  hideProgressBar={false}
+                  newestOnTop={false}
+                  closeOnClick
+                  rtl={false}
+                  pauseOnFocusLoss
+                  draggable
+                  pauseOnHover
+                  theme="colored"
+                />
+
+                <Routes>
+                  {/* Rutas públicas */}
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="/login" element={<LoginPage />} />
+                  <Route path="/acceso" element={<AccessCodePage />} />
+                  <Route path="/add-people" element={<PeopleClientePage />} />
+
+                  {/* Rutas protegidas */}
+                  <Route element={<ProtectedRoute />}>
+                    <Route path="/home" element={<HomeIndexPage />} />
+                    <Route path="/register" element={<RegisterPage />} />
+                    <Route path="/VerRegister" element={<VerRegister />} />
+                    <Route path="/registers/:id" element={<EditarRegister />} />
+                    <Route path="/tasks" element={<TasksPage />} />
+                    <Route path="/add-task" element={<TaskFormPage />} />
+                    <Route path="/tasks/:id" element={<TaskFormPage />} />
+                    <Route path="/people" element={<PeoplePage />} />
+                    <Route path="/people/:id" element={<EditPeoplePage />} />
+                    <Route path="/add-people2" element={<AddPeopleForm />} />
+                    <Route path="/tests" element={<TestsPage />} />
+                    <Route path="/tests/:id" element={<EditTestPage />} />
+                    <Route
+                      path="/tests/:id/detailEmpresa"
+                      element={<TestEmpresa />}
+                    />
+                    <Route
+                      path="/tests/:id/detailEmpleado"
+                      element={<TestEmpleado />}
+                    />
+                    <Route path="/add-tests" element={<TestsFormPage />} />
+                    <Route path="/profile" element={<ProfilePage />} />
+                    <Route path="/PowerBi" element={<GraficaPowerBi />} />
+                    <Route
+                      path="/create-company"
+                      element={<CreateCompanyPage />}
+                    />
+                    <Route path="/companiesPage" element={<CompaniesPage />} />
+                    <Route
+                      path="/companies/:id/edit"
+                      element={<EditCompanyPage />}
+                    />
+                  </Route>
+                </Routes>
+              </BrowserRouter>
+            </TestsProvider>
+          </PeopleProvider>
+        </TaskProvider>
+      </CompanyProvider>
     </AuthProvider>
   );
 }

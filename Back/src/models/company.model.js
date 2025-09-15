@@ -1,4 +1,3 @@
-// Importa mongoose para definir el esquema y modelo de empresa
 import mongoose from "mongoose";
 
 // Define el esquema de empresa con sus campos y validaciones
@@ -9,7 +8,7 @@ const CompanySchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-      unique: true,
+      // Se elimina 'unique: true' de aquí
     },
     // Código de acceso único para la empresa
     companyAccessCode: {
@@ -29,6 +28,13 @@ const CompanySchema = new mongoose.Schema(
       ref: "User",
       required: false, // Opcional hasta que sea aprobada
     },
+    // Sede principal de la empresa o si tiene varias sedes
+    headquarters: {
+      type: String,
+      trim: true,
+      default: "",
+      required: true, // Asegura que la sede sea un campo requerido
+    },
     // Información adicional de la empresa
     description: {
       type: String,
@@ -40,6 +46,7 @@ const CompanySchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
+      unique: true, // Se agrega 'unique: true' para los emails
     },
     contactPhone: {
       type: String,
@@ -60,9 +67,9 @@ const CompanySchema = new mongoose.Schema(
 );
 
 // Método estático para generar código de acceso único
-CompanySchema.statics.generateAccessCode = function() {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  let result = '';
+CompanySchema.statics.generateAccessCode = function () {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let result = "";
   for (let i = 0; i < 8; i++) {
     result += chars.charAt(Math.floor(Math.random() * chars.length));
   }
@@ -70,19 +77,21 @@ CompanySchema.statics.generateAccessCode = function() {
 };
 
 // Método estático para generar código único verificando que no exista
-CompanySchema.statics.generateUniqueAccessCode = async function() {
+CompanySchema.statics.generateUniqueAccessCode = async function () {
   let code;
   let exists = true;
-  
+
   while (exists) {
     code = this.generateAccessCode();
     const existingCompany = await this.findOne({ companyAccessCode: code });
     exists = !!existingCompany;
   }
-  
+
   return code;
 };
 
+// ** Importante: Crear el índice compuesto único aquí **
+CompanySchema.index({ name: 1, headquarters: 1 }, { unique: true });
+
 // Exporta el modelo de empresa
 export default mongoose.model("Company", CompanySchema);
-

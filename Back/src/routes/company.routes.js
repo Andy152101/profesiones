@@ -1,8 +1,6 @@
 import { Router } from "express";
 import {
   //requestCompanyRegistration,
-  approveCompany,
-  getPendingCompanies,
   getAllCompanies,
   getCompany,
   updateCompany,

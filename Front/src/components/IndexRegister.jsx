@@ -31,7 +31,9 @@ function IndexRegister({ registerData }) {
               </td>
               {/* Empresa */}
               <td className="p-2 border-t border-gray-600">
-                {registerData.companyRef?.name || "-"}
+                {registerData.companyRef
+                  ? `${registerData.companyRef.name} - ${registerData.companyRef.headquarters}`
+                  : "-"}
               </td>
               {/* Rol */}
               <td className="p-2 border-t border-gray-600">
@@ -40,7 +42,6 @@ function IndexRegister({ registerData }) {
             </tr>
           </tbody>
         </table>
-
         <div className="flex justify-end mt-4 gap-2">
           <button
             onClick={() => {
@@ -52,13 +53,14 @@ function IndexRegister({ registerData }) {
                 deleteRegister(registerData._id);
               }
             }}
-            className="bg-red-500 text-white px-4 py-2 rounded-md"
+            className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md shadow-sm transition"
           >
             Eliminar
           </button>
+
           <Link
             to={`/registers/${registerData._id}`}
-            className="bg-claroSena text-white px-4 py-2 rounded-md"
+            className="bg-claroSena hover:bg-sky-600 text-white px-4 py-2 rounded-md shadow-sm transition"
           >
             Editar
           </Link>
@@ -78,6 +80,7 @@ IndexRegister.propTypes = {
     createdAt: PropTypes.string.isRequired,
     companyRef: PropTypes.shape({
       name: PropTypes.string,
+      headquarters: PropTypes.string,
     }),
   }).isRequired,
 };

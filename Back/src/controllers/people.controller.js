@@ -40,7 +40,9 @@ export const getPeoples = async (req, res) => {
       filter = { _id: req.user.peopleRef };
     }
 
-    const result = await People.find(filter).populate("company", "name").exec();
+    const result = await People.find(filter)
+      .populate("company", "name headquarters")
+      .exec();
 
     return res.status(200).json(result);
   } catch (err) {
@@ -70,14 +72,19 @@ export const createPeople = async (req, res) => {
         .json({ error: `Correo electrónico '${email}' ya existe` });
     }
 
-    // 1️⃣ Crear persona
+    //  Crear persona
     const newPerson = new People(req.body);
-    const savedPerson = await newPerson.save();
+    const savedPerson = await newPerson.save(); //  primero guardamos
+    await savedPerson.populate("company", "name headquarters"); // luego populamos
 
     // 2️⃣ Crear usuario asociado
     const hashedPassword = await bcrypt.hash(docnumber, 10); // contraseña inicial = cédula
+    const normalizedName = savedPerson.names
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, "_");
     const newUser = new User({
-      username: `emp_${docnumber}`, // o el mismo email si prefieres
+      username: normalizedName, // o el mismo email si prefieres
       email,
       password: hashedPassword,
       role: "empleado", // 👈 puedes cambiarlo según el caso
@@ -179,7 +186,7 @@ export const getPeopleByDocNumber = async (req, res) => {
   try {
     const { docNumber } = req.params;
     const result = await People.findOne({ docnumber: docNumber })
-      .populate("company", "name")
+      .populate("company", "name headquarters")
       .exec();
 
     if (!result) {

@@ -40,8 +40,8 @@ export const deleteRegistersRequest = async (id) =>
   axios.delete(`/registers/${id}`);
 
 // Gestión de empresas
-export const requestCompanyRegistrationRequest = (companyData) =>
-  axios.post(`/companies`, companyData); // coincide con la ruta solo admin
+export const createCompanyRequest = (companyData) =>
+  axios.post(`/companies`, companyData);
 export const getAllCompaniesRequest = () => axios.get(`/companies`);
 export const getCompanyRequest = (id) => axios.get(`/companies/${id}`);
 export const updateCompanyRequest = (id, companyData) =>

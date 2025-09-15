@@ -493,7 +493,7 @@ const EditTestPage = () => {
           user: data.user?._id || "",
           names: data.user?.names || "",
           docnumber: data.user?.docnumber || "",
-          company: data.company?.name || "",
+          company: data.company || "",
         });
       } catch (error) {
         console.error("Error fetching test:", error);
@@ -583,7 +583,13 @@ const EditTestPage = () => {
                 type="text"
                 name="company"
                 placeholder="Empresa"
-                value={form.company}
+                value={
+                  form.company
+                    ? `${form.company.name} - ${
+                        form.company.headquarters || ""
+                      }`
+                    : "-"
+                }
                 disabled
                 className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />

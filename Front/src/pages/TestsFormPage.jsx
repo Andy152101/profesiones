@@ -518,24 +518,29 @@ const TestsFormPage = () => {
         return;
       }
 
-      setForm({
-        ...form,
+      setForm((prevForm) => ({
+        ...prevForm,
         names: people.names || "",
         docnumber: people.docnumber || "",
-        company: people.company?.name || "-", // ✅ mostrar nombre
+        company: people.company ? people.company._id : "", //  aquí va el _id
+        companyLabel: people.company
+          ? `${people.company.name} - ${people.company.headquarters || ""}`
+          : "-", // solo para mostrar
         dominanthand: people.dominanthand || "",
-      });
+        user: people._id,
+      }));
 
       setPersonInfo({
         names: people.names || "",
         docnumber: people.docnumber || "",
-        company: people.company?.name || "-", // ✅ mostrar nombre
+        company: people.company
+          ? `${people.company.name} - ${people.company.headquarters || ""}`
+          : "-",
         dominanthand: people.dominanthand || "",
       });
-      setForm((prevForm) => ({ ...prevForm, user: people._id }));
     } catch (error) {
       console.log("Person search failed:", error);
-      navigate("/add-people2"); // Redirige a la página de 'people' en caso de error
+      navigate("/add-people2");
     }
   };
   const handleSubmit = async (e) => {
@@ -699,7 +704,7 @@ const TestsFormPage = () => {
                 type="text"
                 name="company"
                 placeholder="Empresa"
-                value={form.company}
+                value={form.companyLabel}
                 disabled
                 className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               />

@@ -1,15 +1,17 @@
 import { useForm } from "react-hook-form";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 function EditRegisterPage() {
   const {
     register,
     handleSubmit,
+    setValue,
     watch,
     formState: { errors },
   } = useForm();
+
   const {
     updateRegister,
     getRegister,
@@ -17,33 +19,54 @@ function EditRegisterPage() {
     isAuthenticated,
     errors: RegisterErrors,
   } = useAuth();
+
   const navigate = useNavigate();
   const { id } = useParams();
   const [companies, setCompanies] = useState([]);
+  const fetchedRegister = useRef(false);
   const role = watch("role");
 
-  // Cargar datos del usuario
+  // 1️⃣ Cargar registro y empresas en paralelo
   useEffect(() => {
-    if (isAuthenticated && id) {
+    // Solo se ejecuta una vez para evitar re-fetches innecesarios
+    if (isAuthenticated && id && !fetchedRegister.current) {
+      fetchedRegister.current = true;
       getRegister(id);
     }
-  }, [id, isAuthenticated, getRegister]);
 
-  useEffect(() => {
     const fetchCompanies = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/companies", {
-          credentials: "include", // si usas cookies
-        });
+        const res = await fetch(
+          `http://localhost:5000/api/companies?t=${Date.now()}`,
+          {
+            credentials: "include",
+          }
+        );
         const data = await res.json();
         setCompanies(data);
       } catch (error) {
         console.error("Error al cargar empresas:", error);
       }
     };
-
     fetchCompanies();
-  }, []);
+  }, [id, isAuthenticated, getRegister]);
+
+  // 2️⃣ Setear valores del form solo cuando ambos, el registro y las empresas, estén listos
+  useEffect(() => {
+    // Se asegura de que selectedRegister y companies no sean null o estén vacíos
+    if (selectedRegister && companies.length > 0) {
+      setValue("username", selectedRegister.username);
+      setValue("email", selectedRegister.email);
+      setValue("role", selectedRegister.role);
+      const companyId =
+        selectedRegister.company?._id || selectedRegister.company?.id;
+
+      // Solo establece el valor si el ID de la empresa existe en la lista de empresas cargadas
+      if (companyId && companies.some((c) => (c._id || c.id) === companyId)) {
+        setValue("companyRef", companyId);
+      }
+    }
+  }, [selectedRegister, companies, setValue]);
 
   const onSubmit = handleSubmit(async (values) => {
     if (!values.password) delete values.password;
@@ -53,7 +76,7 @@ function EditRegisterPage() {
     if (success) navigate("/VerRegister");
   });
 
-  if (!selectedRegister) {
+  if (!selectedRegister || companies.length === 0) {
     return <h1 className="text-black text-center">Cargando...</h1>;
   }
 
@@ -71,7 +94,6 @@ function EditRegisterPage() {
           <input
             type="text"
             {...register("username", { required: true })}
-            defaultValue={selectedRegister?.username}
             className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
             placeholder="Nombre"
           />
@@ -83,7 +105,6 @@ function EditRegisterPage() {
           <input
             type="email"
             {...register("email", { required: true })}
-            defaultValue={selectedRegister?.email}
             className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
             placeholder="Correo"
           />
@@ -102,7 +123,6 @@ function EditRegisterPage() {
           <h2>Rol</h2>
           <select
             {...register("role", { required: true })}
-            defaultValue={selectedRegister?.role}
             className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
           >
             <option value="">Seleccione un rol</option>
@@ -118,21 +138,16 @@ function EditRegisterPage() {
               <select
                 id="companyRef"
                 {...register("companyRef", { required: true })}
-                defaultValue={
-                  selectedRegister?.companyRef?._id ||
-                  selectedRegister?.companyRef ||
-                  ""
-                }
                 className="w-full bg-white text-black px-4 py-2 rounded-md my-2"
               >
                 <option value="">Seleccione una empresa</option>
-                {(Array.isArray(companies) ? companies : []).map((c) => (
-                  <option key={c._id} value={c._id}>
-                    {c.name}
+                {companies.map((c) => (
+                  <option key={c._id || c.id} value={c._id || c.id}>
+                    {/* Este es el cambio: muestra el nombre y la sede */}
+                    {c.name} - {c.headquarters}
                   </option>
                 ))}
               </select>
-
               {errors.companyRef && (
                 <p className="text-red-500">La empresa es requerida</p>
               )}

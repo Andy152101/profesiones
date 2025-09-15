@@ -64,22 +64,24 @@ function PeoplePage() {
           </div>
         )}
 
-        {/* 🔎 Buscador a la derecha */}
-        <div className="flex items-center gap-2 ml-auto">
-          <input
-            type="text"
-            value={searchDocNumber}
-            onChange={handleInputChange}
-            placeholder="Buscar por número de documento"
-            className="px-4 py-2 border border-gray-300 rounded-md text-black"
-          />
-          <button
-            onClick={handleSearch}
-            className="px-4 py-2 bg-greenSena text-white rounded-md"
-          >
-            Buscar
-          </button>
-        </div>
+        {/* Buscador solo visible para admin y consultor */}
+        {user?.role !== "empleado" && (
+          <div className="flex items-center gap-2 ml-auto">
+            <input
+              type="text"
+              value={searchDocNumber}
+              onChange={handleInputChange}
+              placeholder="Buscar por número de documento"
+              className="px-4 py-2 border border-gray-300 rounded-md text-black"
+            />
+            <button
+              onClick={handleSearch}
+              className="px-4 py-2 bg-greenSena text-white rounded-md"
+            >
+              Buscar
+            </button>
+          </div>
+        )}
       </div>
 
       {filteredPeoples.length === 0 ? (

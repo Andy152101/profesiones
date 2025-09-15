@@ -95,7 +95,10 @@ function TestEmpleado() {
           </div>
           <div className="col-span-1">
             <p className="w-full bg-white text-black px-4 py-2 rounded-md my-2">
-              <strong>Compañia:</strong> {test.company?.name || "Sin empresa"}
+              <strong>Compañia:</strong>{" "}
+              {test.company
+                ? `${test.company.name} - ${test.company.headquarters || ""}`
+                : "Sin empresa"}{" "}
             </p>
           </div>
           <div className="col-span-1">

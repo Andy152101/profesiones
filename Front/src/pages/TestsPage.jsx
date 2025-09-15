@@ -48,6 +48,7 @@ function TestsPage() {
       <div className="flex justify-between items-center mb-4">
         {/* Botones de acciones */}
         <div className="flex gap-2">
+          {/* Crear Tests solo admin */}
           {user?.role === "admin" && (
             <Link
               to="/add-tests"
@@ -57,30 +58,35 @@ function TestsPage() {
             </Link>
           )}
 
-          <button
-            onClick={() => exportToExcel(tests, user)}
-            className="px-4 py-2 bg-ester text-white rounded-md"
-          >
-            Descargar Excel
-          </button>
+          {/* Excel: admin y consultor */}
+          {(user?.role === "admin" || user?.role === "consultorEmpresa") && (
+            <button
+              onClick={() => exportToExcel(tests, user)}
+              className="px-4 py-2 bg-ester text-white rounded-md"
+            >
+              Descargar Excel
+            </button>
+          )}
         </div>
 
-        {/* El buscador lo ven todos */}
-        <div className="flex items-center gap-2">
-          <input
-            type="text"
-            value={searchDocNumber}
-            onChange={handleChange}
-            placeholder="Buscar por número de documento"
-            className="px-4 py-2 border border-gray-300 rounded-md text-black"
-          />
-          <button
-            onClick={handleSearch}
-            className="px-4 py-2 bg-greenSena text-white rounded-md"
-          >
-            Buscar
-          </button>
-        </div>
+        {/* 🔎 Buscador: solo admin y consultor */}
+        {(user?.role === "admin" || user?.role === "consultorEmpresa") && (
+          <div className="flex items-center gap-2">
+            <input
+              type="text"
+              value={searchDocNumber}
+              onChange={handleChange}
+              placeholder="Buscar por número de documento"
+              className="px-4 py-2 border border-gray-300 rounded-md text-black"
+            />
+            <button
+              onClick={handleSearch}
+              className="px-4 py-2 bg-greenSena text-white rounded-md"
+            >
+              Buscar
+            </button>
+          </div>
+        )}
       </div>
 
       {filteredTests.length === 0 ? (

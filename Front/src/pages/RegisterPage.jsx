@@ -110,11 +110,11 @@ function RegisterPage() {
                 <option value="">Seleccione una empresa</option>
                 {(Array.isArray(companies) ? companies : []).map((c) => (
                   <option key={c._id} value={c._id}>
-                    {c.name}
+                    {/* Aquí está la modificación para mostrar la sede */}
+                    {c.name} - {c.headquarters}
                   </option>
                 ))}
               </select>
-
               {errors.companyRef && (
                 <p className="text-red-500">La empresa es requerida</p>
               )}

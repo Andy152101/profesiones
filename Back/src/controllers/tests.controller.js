@@ -29,7 +29,7 @@ export const getTests = async (req, res) => {
     }
 
     const result = await Tests.find(filter)
-      .populate("company", "name")
+      .populate("company", "name headquarters")
       .populate("user", "names docnumber email");
 
     return res.status(200).json(result);
@@ -59,8 +59,10 @@ export const createTests = async (req, res) => {
       company = companyDoc._id;
     }
 
-    const item = new Tests({ ...rest, company });
-    const result = await item.save();
+    const newTest = new Tests({ ...rest, company });
+    const result = await (
+      await newTest.save()
+    ).populate("company", "name headquarters");
 
     return res.status(201).json(result);
   } catch (err) {
@@ -86,7 +88,7 @@ export const getTest = async (req, res) => {
     if (!id) return res.status(400).json({ message: "ID is required" });
 
     const test = await Tests.findById(id)
-      .populate("company", "name")
+      .populate("company", "name headquarters")
       .populate("user", "names docnumber email");
 
     if (!test) return res.status(404).json({ message: "Test not found" });
@@ -96,7 +98,7 @@ export const getTest = async (req, res) => {
       role !== "admin" &&
       !(
         (role === "consultorEmpresa" &&
-          test.company.toString() === companyRef.toString()) ||
+          test.company._id.toString() === companyRef.toString()) || // 👈 aquí el fix
         (role === "empleado" &&
           test.user._id.toString() === peopleRef.toString())
       )
@@ -162,7 +164,7 @@ export const updateTest = async (req, res) => {
       new: true,
       runValidators: true,
     })
-      .populate("company", "name")
+      .populate("company", "name headquarters")
       .populate("user", "names docnumber email");
 
     if (!updatedTest)
