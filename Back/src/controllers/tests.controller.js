@@ -42,6 +42,16 @@ const testConfigurations = {
   reaction2: { min: 1, max: 301, invert: true }, // Menos tiempo es mejor
   startime: { min: 1, max: 190, invert: true }, // Menos tiempo es mejor
   startoucherrors: { min: 1, max: 44, invert: true }, // Menos errores es mejor
+  fingers: { min: 0, max: 100, invert: false }, // Asumiendo 0-100, más es mejor
+  ishinormalvision: { min: 0, max: 100, invert: false },
+  ishideuteranopia: { min: 0, max: 100, invert: false },
+  ishiportanopia: { min: 0, max: 100, invert: false },
+  ishidaltonism: { min: 0, max: 100, invert: true }, // Más daltonismo es peor
+  lumosityTrain: { min: 0, max: 10000, invert: false }, // Asumiendo un rango amplio, más es mejor
+  lumosityMemory: { min: 0, max: 10000, invert: false },
+  lumosityBirds: { min: 0, max: 10000, invert: false },
+  wireGameTime: { min: 1, max: 60, invert: true }, // Menos tiempo es mejor
+  wireGameError: { min: 0, max: 20, invert: true }, // Menos errores es mejor
 };
 
 // Función para analizar los resultados de un test y recomendar profesiones
@@ -54,10 +64,8 @@ export const analyzeTestResults = async (req, res) => {
       return res.status(404).json({ message: "Test no encontrado" });
     }
 
-    let maxScore = -1;
-    let bestTestField = null;
-
-    // Itera sobre las configuraciones de las pruebas para encontrar el mejor desempeño
+    const scores = [];
+    // Normaliza todos los puntajes y los guarda
     for (const field in testConfigurations) {
       if (test[field] !== undefined) {
         const config = testConfigurations[field];
@@ -68,27 +76,37 @@ export const analyzeTestResults = async (req, res) => {
           config.max,
           config.invert
         );
-
-        if (normalized > maxScore) {
-          maxScore = normalized;
-          bestTestField = field;
-        }
+        scores.push({ field, normalized });
       }
     }
 
-    if (!bestTestField) {
+    if (scores.length === 0) {
+      return res
+        .status(400)
+        .json({ message: "No hay puntajes analizables en este test." });
+    }
+
+    // Encuentra el puntaje normalizado más alto
+    const maxScore = Math.max(...scores.map((s) => s.normalized));
+
+    // Encuentra todos los campos que tienen el puntaje más alto
+    const bestTestFields = scores
+      .filter((s) => s.normalized === maxScore)
+      .map((s) => s.field);
+
+    if (bestTestFields.length === 0) {
       return res
         .status(400)
         .json({ message: "No se pudo determinar la mejor habilidad del test" });
     }
 
-    // Busca profesiones que coincidan con el campo de la mejor habilidad
+    // Busca profesiones que coincidan con CUALQUIERA de los mejores campos
     const recommendedProfessions = await Professions.find({
-      "linked_skills.test_field": bestTestField,
+      "linked_skills.test_field": { $in: bestTestFields },
     });
 
     res.status(200).json({
-      bestTestField,
+      bestTestFields,
       normalizedScore: maxScore,
       recommendedProfessions,
     });

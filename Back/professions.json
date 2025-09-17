@@ -1,27 +1,233 @@
 [
   {
-    "name": "Ingeniero Mecánico",
-    "description": "Diseña, construye y mantiene máquinas, motores y sistemas mecánicos.",
-    "linked_skills": [{ "test_field": "minedisplacementtotal" }]
-  },
-  {
-    "name": "Ensamblador de Electrónica",
-    "description": "Monta componentes electrónicos en placas de circuito impreso.",
-    "linked_skills": [{ "test_field": "purdeassemble" }]
-  },
-  {
-    "name": "Controlador de Tráfico Aéreo",
-    "description": "Coordina el movimiento de aeronaves para mantener la seguridad y la eficiencia.",
-    "linked_skills": [{ "test_field": "activityjtest" }]
-  },
-  {
     "name": "Cirujano",
-    "description": "Realiza operaciones quirúrgicas para tratar enfermedades y lesiones.",
+    "description": "Realiza operaciones para tratar enfermedades, lesiones y deformidades.",
+    "linked_skills": [
+      { "test_field": "mineplacementtotal" },
+      { "test_field": "fingers" }
+    ]
+  },
+  {
+    "name": "Operario de maquinaria",
+    "description": "Opera y supervisa maquinaria pesada en construcción o producción.",
+    "linked_skills": [{ "test_field": "minerotationtotal" }]
+  },
+  {
+    "name": "Técnico dental",
+    "description": "Fabrica y repara prótesis dentales y otros aparatos.",
+    "linked_skills": [{ "test_field": "mineplacementtotal" }]
+  },
+  {
+    "name": "Joyero",
+    "description": "Diseña, crea y repara joyas y objetos preciosos.",
+    "linked_skills": [{ "test_field": "mineplacementtotal" }]
+  },
+  {
+    "name": "Relojero",
+    "description": "Monta, repara y ajusta relojes y otros instrumentos de precisión.",
+    "linked_skills": [{ "test_field": "purdedominanthand" }]
+  },
+  {
+    "name": "Ensamblador electrónico",
+    "description": "Monta y suelda componentes en circuitos electrónicos.",
+    "linked_skills": [{ "test_field": "purdenodominanthand" }]
+  },
+  {
+    "name": "Técnico de laboratorio",
+    "description": "Realiza pruebas y análisis en un entorno de laboratorio.",
     "linked_skills": [{ "test_field": "purdebothhands" }]
   },
   {
-    "name": "Piloto de Carreras",
-    "description": "Conduce vehículos de alta velocidad en competencias.",
+    "name": "Artesano",
+    "description": "Crea objetos únicos a mano, utilizando habilidades especializadas.",
+    "linked_skills": [{ "test_field": "purdeassemble" }]
+  },
+  {
+    "name": "Gerente de proyectos",
+    "description": "Planifica, ejecuta y supervisa proyectos para alcanzar objetivos específicos.",
+    "linked_skills": [{ "test_field": "activityjtest" }]
+  },
+  {
+    "name": "Abogado",
+    "description": "Asesora y representa a clientes en asuntos legales.",
+    "linked_skills": [{ "test_field": "activityjtest" }]
+  },
+  {
+    "name": "Psicólogo",
+    "description": "Evalúa y trata trastornos mentales, emocionales y del comportamiento.",
+    "linked_skills": [{ "test_field": "activityjtest" }]
+  },
+  {
+    "name": "Docente",
+    "description": "Enseña a estudiantes en diversos niveles educativos.",
+    "linked_skills": [
+      { "test_field": "activityjtest" },
+      { "test_field": "lumosityMemory" }
+    ]
+  },
+  {
+    "name": "Neurocirujano",
+    "description": "Se especializa en la cirugía del sistema nervioso.",
+    "linked_skills": [{ "test_field": "wireGameTime" }]
+  },
+  {
+    "name": "Técnico en electrónica",
+    "description": "Repara y mantiene equipos y sistemas electrónicos.",
+    "linked_skills": [{ "test_field": "wireGameTime" }]
+  },
+  {
+    "name": "Dentista",
+    "description": "Diagnostica y trata problemas de los dientes y la boca.",
+    "linked_skills": [{ "test_field": "wireGameTime" }]
+  },
+  {
+    "name": "Diseñador de circuitos",
+    "description": "Crea y prueba circuitos para dispositivos electrónicos.",
+    "linked_skills": [{ "test_field": "wireGameTime" }]
+  },
+  {
+    "name": "Ilustrador",
+    "description": "Crea imágenes y gráficos para diversos medios.",
+    "linked_skills": [{ "test_field": "startime" }]
+  },
+  {
+    "name": "Diseñador gráfico",
+    "description": "Comunica ideas visualmente a través de gráficos y diseños.",
+    "linked_skills": [{ "test_field": "startime" }]
+  },
+  {
+    "name": "Técnico en prótesis",
+    "description": "Diseña y fabrica prótesis para reemplazar partes del cuerpo.",
+    "linked_skills": [{ "test_field": "startoucherrors" }]
+  },
+  {
+    "name": "Calígrafo",
+    "description": "Se especializa en el arte de la escritura decorativa.",
+    "linked_skills": [{ "test_field": "startoucherrors" }]
+  },
+  {
+    "name": "Piloto",
+    "description": "Opera aeronaves para transportar pasajeros o carga.",
+    "linked_skills": [{ "test_field": "reaction1" }]
+  },
+  {
+    "name": "Deportista profesional",
+    "description": "Compite en deportes a nivel profesional.",
+    "linked_skills": [{ "test_field": "reaction1" }]
+  },
+  {
+    "name": "Bombero",
+    "description": "Extingue incendios y responde a emergencias.",
     "linked_skills": [{ "test_field": "reaction2" }]
+  },
+  {
+    "name": "Guardia de seguridad",
+    "description": "Protege propiedades y personas contra robos y daños.",
+    "linked_skills": [{ "test_field": "reaction2" }]
+  },
+  {
+    "name": "Pianista",
+    "description": "Toca el piano a nivel profesional.",
+    "linked_skills": [{ "test_field": "fingers" }]
+  },
+  {
+    "name": "Técnico en relojería",
+    "description": "Repara y mantiene relojes y otros mecanismos de tiempo.",
+    "linked_skills": [{ "test_field": "fingers" }]
+  },
+  {
+    "name": "Terapeuta ocupacional",
+    "description": "Ayuda a personas a participar en las actividades de la vida diaria.",
+    "linked_skills": [{ "test_field": "fingers" }]
+  },
+  {
+    "name": "Diseñador de moda",
+    "description": "Crea ropa, accesorios y calzado.",
+    "linked_skills": [{ "test_field": "ishinormalvision" }]
+  },
+  {
+    "name": "Técnico en impresión",
+    "description": "Opera y mantiene prensas de impresión.",
+    "linked_skills": [{ "test_field": "ishideuteranopia" }]
+  },
+  {
+    "name": "Inspector de calidad visual",
+    "description": "Inspecciona productos para asegurar que cumplen con los estándares de calidad visual.",
+    "linked_skills": [{ "test_field": "ishiportanopia" }]
+  },
+  {
+    "name": "Controlador aéreo",
+    "description": "Dirige el tráfico aéreo para garantizar la seguridad.",
+    "linked_skills": [{ "test_field": "ishidaltonism" }]
+  },
+  {
+    "name": "Conductor profesional",
+    "description": "Opera vehículos para transportar pasajeros o mercancías.",
+    "linked_skills": [{ "test_field": "ishidaltonism" }]
+  },
+  {
+    "name": "Fotógrafo",
+    "description": "Captura imágenes con una cámara para contar historias o vender productos.",
+    "linked_skills": [{ "test_field": "ishidaltonism" }]
+  },
+  {
+    "name": "Vigilante",
+    "description": "Supervisa y protege un área para prevenir incidentes.",
+    "linked_skills": [{ "test_field": "ishidaltonism" }]
+  },
+  {
+    "name": "Analista financiero",
+    "description": "Evalúa oportunidades de inversión y la salud financiera de las organizaciones.",
+    "linked_skills": [{ "test_field": "lumosityTrain" }]
+  },
+  {
+    "name": "Programador",
+    "description": "Escribe y prueba código para software y aplicaciones.",
+    "linked_skills": [{ "test_field": "lumosityTrain" }]
+  },
+  {
+    "name": "Estratega militar",
+    "description": "Planifica y dirige operaciones militares.",
+    "linked_skills": [{ "test_field": "lumosityTrain" }]
+  },
+  {
+    "name": "Ingeniero de sistemas",
+    "description": "Diseña y gestiona sistemas informáticos complejos.",
+    "linked_skills": [{ "test_field": "lumosityTrain" }]
+  },
+  {
+    "name": "Investigador",
+    "description": "Realiza investigaciones para descubrir nuevos conocimientos.",
+    "linked_skills": [{ "test_field": "lumosityMemory" }]
+  },
+  {
+    "name": "Traductor simultáneo",
+    "description": "Traduce oralmente de un idioma a otro en tiempo real.",
+    "linked_skills": [{ "test_field": "lumosityMemory" }]
+  },
+  {
+    "name": "Psicopedagogo",
+    "description": "Ayuda a personas con dificultades de aprendizaje.",
+    "linked_skills": [{ "test_field": "lumosityMemory" }]
+  },
+  {
+    "name": "Arquitecto",
+    "description": "Diseña edificios y otras estructuras.",
+    "linked_skills": [{ "test_field": "lumosityBirds" }]
+  },
+  {
+    "name": "Urbanista",
+    "description": "Planifica el desarrollo y uso del suelo en áreas urbanas.",
+    "linked_skills": [{ "test_field": "lumosityBirds" }]
+  },
+  {
+    "name": "Ingeniero civil",
+    "description": "Diseña y supervisa la construcción de infraestructuras como carreteras y puentes.",
+    "linked_skills": [{ "test_field": "lumosityBirds" }]
+  },
+  {
+    "name": "Diseñador industrial",
+    "description": "Diseña productos manufacturados, desde coches hasta electrodomésticos.",
+    "linked_skills": [{ "test_field": "lumosityBirds" }]
   }
 ]

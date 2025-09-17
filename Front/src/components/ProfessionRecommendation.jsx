@@ -45,8 +45,10 @@ function ProfessionRecommendation({ testId }) {
         Profesiones Recomendadas
       </h3>
       <p className="text-gray-300 mb-2">
-        Habilidad más destacada:{" "}
-        <span className="font-semibold">{recommendations.bestTestField}</span>{" "}
+        Habilidad(es) más destacada(s):{" "}
+        <span className="font-semibold">
+          {recommendations.bestTestFields.join(", ")}
+        </span>{" "}
         con un puntaje normalizado de{" "}
         <span className="font-semibold">
           {recommendations.normalizedScore.toFixed(2)}%

@@ -232,6 +232,19 @@ const testsSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    // Pruebas de Lumosity
+    lumosityTrain: {
+      type: Number,
+      default: 0,
+    },
+    lumosityMemory: {
+      type: Number,
+      default: 0,
+    },
+    lumosityBirds: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     //no agrega la fecha de creación y modificación
