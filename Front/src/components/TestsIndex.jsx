@@ -1,12 +1,14 @@
-import { format } from "date-fns";
+import { useState } from "react";
 import { useTests } from "../context/TestsContext";
 import { useAuth } from "../context/AuthContext"; // 👈 aquí traemos el rol
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
+import ProfessionRecommendation from "./ProfessionRecommendation";
 
 function TestsIndex({ tests }) {
   const { deleteTests } = useTests();
   const { isAdmin, isConsultant, isEmployee } = useAuth(); // 👈 helpers que revisan rol
+  const [showRecommendations, setShowRecommendations] = useState(false);
 
   return (
     <div className="bg-blueSena max-w-full w-full p-6 rounded-md overflow-auto mb-6">
@@ -227,6 +229,14 @@ function TestsIndex({ tests }) {
           </tbody>
         </table>
         <div className="flex justify-end mt-4 gap-2">
+          <button
+            onClick={() => setShowRecommendations(!showRecommendations)}
+            className="bg-green-500 text-white px-4 py-2 rounded-md"
+          >
+            {showRecommendations
+              ? "Ocultar Recomendaciones"
+              : "Ver Recomendaciones"}
+          </button>
           {/* 🔴 Solo Admin ve todos */}
           {isAdmin() && (
             <>
@@ -286,6 +296,7 @@ function TestsIndex({ tests }) {
           )}
         </div>
       </header>
+      {showRecommendations && <ProfessionRecommendation testId={tests._id} />}
     </div>
   );
 }
@@ -302,52 +313,52 @@ TestsIndex.propTypes = {
       headquarters: PropTypes.string,
     }),
     dominanthand: PropTypes.string,
-    mineplacementtime1: PropTypes.string,
-    mineplacementtime2: PropTypes.string,
-    mineplacementtotal: PropTypes.string,
+    mineplacementtime1: PropTypes.number,
+    mineplacementtime2: PropTypes.number,
+    mineplacementtotal: PropTypes.number,
     mineplacementscale: PropTypes.string,
-    minerotationtime1: PropTypes.string,
-    minerotationtime2: PropTypes.string,
-    minerotationtotal: PropTypes.string,
+    minerotationtime1: PropTypes.number,
+    minerotationtime2: PropTypes.number,
+    minerotationtotal: PropTypes.number,
     minerotationscale: PropTypes.string,
-    minedisplacementtime1: PropTypes.string,
-    minedisplacementtime2: PropTypes.string,
-    minedisplacementtotal: PropTypes.string,
+    minedisplacementtime1: PropTypes.number,
+    minedisplacementtime2: PropTypes.number,
+    minedisplacementtotal: PropTypes.number,
     minedisplacementscale: PropTypes.string,
     mineobservations: PropTypes.string,
-    purdedominanthand: PropTypes.string,
+    purdedominanthand: PropTypes.number,
     purdedominanthandscale: PropTypes.string,
-    purdenodominanthand: PropTypes.string,
+    purdenodominanthand: PropTypes.number,
     purdenodominanthandscale: PropTypes.string,
-    purdebothhands: PropTypes.string,
+    purdebothhands: PropTypes.number,
     purdebothhandsscale: PropTypes.string,
-    purdeassemble: PropTypes.string,
+    purdeassemble: PropTypes.number,
     purdeassemblescale: PropTypes.string,
     purdeobservations: PropTypes.string,
-    activityjtest: PropTypes.string,
+    activityjtest: PropTypes.number,
     activityjtestscale: PropTypes.string,
     activityjtestobservations: PropTypes.string,
-    reaction1: PropTypes.string,
+    reaction1: PropTypes.number,
     reaction1scale: PropTypes.string,
-    reaction2: PropTypes.string,
+    reaction2: PropTypes.number,
     reaction2scale: PropTypes.string,
     reactionobservations: PropTypes.string,
-    startime: PropTypes.string,
+    startime: PropTypes.number,
     starTimeOne: PropTypes.string,
-    startoucherrors: PropTypes.string,
+    startoucherrors: PropTypes.number,
     starTouchErrorsOne: PropTypes.string,
-    wireGameTime: PropTypes.string,
-    wireGameError: PropTypes.string,
+    wireGameTime: PropTypes.number,
+    wireGameError: PropTypes.number,
     wireGameLevel: PropTypes.string,
     visualAcuity: PropTypes.string,
     visualAcuityLevel: PropTypes.string,
-    fingers: PropTypes.string,
+    fingers: PropTypes.number,
     fingersscale: PropTypes.string,
     fingersobservations: PropTypes.string,
-    ishinormalvision: PropTypes.string,
-    ishideuteranopia: PropTypes.string,
-    ishiportanopia: PropTypes.string,
-    ishidaltonism: PropTypes.string,
+    ishinormalvision: PropTypes.number,
+    ishideuteranopia: PropTypes.number,
+    ishiportanopia: PropTypes.number,
+    ishidaltonism: PropTypes.number,
     ishiobservations: PropTypes.string,
   }).isRequired,
 };

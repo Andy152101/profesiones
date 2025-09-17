@@ -1,0 +1,27 @@
+[
+  {
+    "name": "Ingeniero Mecánico",
+    "description": "Diseña, construye y mantiene máquinas, motores y sistemas mecánicos.",
+    "linked_skills": [{ "test_field": "minedisplacementtotal" }]
+  },
+  {
+    "name": "Ensamblador de Electrónica",
+    "description": "Monta componentes electrónicos en placas de circuito impreso.",
+    "linked_skills": [{ "test_field": "purdeassemble" }]
+  },
+  {
+    "name": "Controlador de Tráfico Aéreo",
+    "description": "Coordina el movimiento de aeronaves para mantener la seguridad y la eficiencia.",
+    "linked_skills": [{ "test_field": "activityjtest" }]
+  },
+  {
+    "name": "Cirujano",
+    "description": "Realiza operaciones quirúrgicas para tratar enfermedades y lesiones.",
+    "linked_skills": [{ "test_field": "purdebothhands" }]
+  },
+  {
+    "name": "Piloto de Carreras",
+    "description": "Conduce vehículos de alta velocidad en competencias.",
+    "linked_skills": [{ "test_field": "reaction2" }]
+  }
+]
