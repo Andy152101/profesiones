@@ -37,48 +37,48 @@ const testsSchema = new mongoose.Schema(
     },
     // Tiempos y escalas de pruebas de colocación, rotación y desplazamiento de minas
     mineplacementtime1: {
-      type: String,
-      default: "",
+      type: Number,
+      default: 0,
     },
     mineplacementtime2: {
-      type: String,
-      default: "",
+      type: Number,
+      default: 0,
     },
     mineplacementtotal: {
-      type: String,
-      default: "",
+      type: Number,
+      default: 0,
     },
     mineplacementscale: {
       type: String,
       default: "",
     },
     minerotationtime1: {
-      type: String,
-      default: "",
+      type: Number,
+      default: 0,
     },
     minerotationtime2: {
-      type: String,
-      default: "",
+      type: Number,
+      default: 0,
     },
     minerotationtotal: {
-      type: String,
-      default: "",
+      type: Number,
+      default: 0,
     },
     minerotationscale: {
       type: String,
       default: "",
     },
     minedisplacementtime1: {
-      type: String,
-      default: "",
+      type: Number,
+      default: 0,
     },
     minedisplacementtime2: {
-      type: String,
-      default: "",
+      type: Number,
+      default: 0,
     },
     minedisplacementtotal: {
-      type: String,
-      default: "",
+      type: Number,
+      default: 0,
     },
     minedisplacementscale: {
       type: String,
@@ -90,32 +90,32 @@ const testsSchema = new mongoose.Schema(
     },
     // Pruebas de purde (mano dominante, no dominante, ambas, ensamblaje)
     purdedominanthand: {
-      type: String,
-      default: "",
+      type: Number,
+      default: 0,
     },
     purdedominanthandscale: {
       type: String,
       default: "",
     },
     purdenodominanthand: {
-      type: String,
-      default: "",
+      type: Number,
+      default: 0,
     },
     purdenodominanthandscale: {
       type: String,
       default: "",
     },
     purdebothhands: {
-      type: String,
-      default: "",
+      type: Number,
+      default: 0,
     },
     purdebothhandsscale: {
       type: String,
       default: "",
     },
     purdeassemble: {
-      type: String,
-      default: "",
+      type: Number,
+      default: 0,
     },
     purdeassemblescale: {
       type: String,
@@ -127,8 +127,8 @@ const testsSchema = new mongoose.Schema(
     },
     // Pruebas de actividad J
     activityjtest: {
-      type: String,
-      default: "",
+      type: Number,
+      default: 0,
     },
     activityjtestscale: {
       type: String,
@@ -140,16 +140,16 @@ const testsSchema = new mongoose.Schema(
     },
     // Pruebas de reacción
     reaction1: {
-      type: String,
-      default: "",
+      type: Number,
+      default: 0,
     },
     reaction1scale: {
       type: String,
       default: "",
     },
     reaction2: {
-      type: String,
-      default: "",
+      type: Number,
+      default: 0,
     },
     reaction2scale: {
       type: String,
@@ -161,8 +161,8 @@ const testsSchema = new mongoose.Schema(
     },
     // Pruebas de dedos
     fingers: {
-      type: String,
-      default: "",
+      type: Number,
+      default: 0,
     },
     fingersscale: {
       type: String,
@@ -174,20 +174,20 @@ const testsSchema = new mongoose.Schema(
     },
     // Pruebas de visión de colores (Ishihara)
     ishinormalvision: {
-      type: String,
-      default: "",
+      type: Number,
+      default: 0,
     },
     ishideuteranopia: {
-      type: String,
-      default: "",
+      type: Number,
+      default: 0,
     },
     ishiportanopia: {
-      type: String,
-      default: "",
+      type: Number,
+      default: 0,
     },
     ishidaltonism: {
-      type: String,
-      default: "",
+      type: Number,
+      default: 0,
     },
     ishiobservations: {
       type: String,
@@ -195,16 +195,16 @@ const testsSchema = new mongoose.Schema(
     },
     // Pruebas de estrella
     startime: {
-      type: String,
-      default: "",
+      type: Number,
+      default: 0,
     },
     starTimeOne: {
       type: String,
       default: "",
     },
     startoucherrors: {
-      type: String,
-      default: "",
+      type: Number,
+      default: 0,
     },
     starTouchErrorsOne: {
       type: String,
@@ -212,12 +212,12 @@ const testsSchema = new mongoose.Schema(
     },
     // Pruebas de juego de alambre
     wireGameTime: {
-      type: String,
-      default: "",
+      type: Number,
+      default: 0,
     },
     wireGameError: {
-      type: String,
-      default: "",
+      type: Number,
+      default: 0,
     },
     wireGameLevel: {
       type: String,

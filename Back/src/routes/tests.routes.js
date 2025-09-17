@@ -6,6 +6,7 @@ import {
   getTest,
   deleteTest,
   updateTest,
+  analyzeTestResults,
 } from "../controllers/tests.controller.js";
 import { authRequierd } from "../middlewares/validateToken.js"; // 👈 importa tu middleware
 
@@ -14,6 +15,9 @@ const router = Router();
 
 // Obtiene todos los tests
 router.get("/tests", authRequierd, getTests);
+
+// Ruta para analizar los resultados de un test específico
+router.get("/tests/:id/analyze", authRequierd, analyzeTestResults);
 
 // Obtiene un test específico por ID
 router.get("/tests/:id", authRequierd, getTest);
