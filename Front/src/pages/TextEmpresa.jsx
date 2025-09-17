@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import { format } from "date-fns";
+import ProfessionRecommendation from "../components/ProfessionRecommendation";
 
 function TestEmpresa() {
   const { id } = useParams();
@@ -433,6 +434,10 @@ function TestEmpresa() {
             </p>
           </div>
 
+          <hr className="col-span-4 my-4" />
+          <div className="col-span-4">
+            <ProfessionRecommendation testId={id} />
+          </div>
           <div className="flex justify-center col-span-4">
             <button
               id="pdf-button"

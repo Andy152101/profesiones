@@ -24,7 +24,7 @@ function ProfessionRecommendation({ testId }) {
   }, [testId]);
 
   if (loading) {
-    return <p className="text-white">Cargando recomendaciones...</p>;
+    return <p className="text-black">Cargando recomendaciones...</p>;
   }
 
   if (error) {
@@ -33,18 +33,18 @@ function ProfessionRecommendation({ testId }) {
 
   if (!recommendations || recommendations.recommendedProfessions.length === 0) {
     return (
-      <p className="text-white">
+      <p className="text-black">
         No se encontraron profesiones recomendadas para este test.
       </p>
     );
   }
 
   return (
-    <div className="bg-gray-800 p-6 rounded-md mt-4">
-      <h3 className="text-xl font-bold text-white mb-4">
+    <div className="bg-transparent p-6 rounded-md mt-4">
+      <h3 className="text-xl font-bold text-black mb-4">
         Profesiones Recomendadas
       </h3>
-      <p className="text-gray-300 mb-2">
+      <p className="text-black mb-2">
         Habilidad(es) más destacada(s):{" "}
         <span className="font-semibold">
           {recommendations.bestTestFields.join(", ")}
@@ -57,9 +57,9 @@ function ProfessionRecommendation({ testId }) {
       </p>
       <ul className="space-y-4">
         {recommendations.recommendedProfessions.map((profession) => (
-          <li key={profession._id} className="bg-gray-700 p-4 rounded-md">
-            <h4 className="text-lg font-bold text-white">{profession.name}</h4>
-            <p className="text-gray-300">{profession.description}</p>
+          <li key={profession._id} className="bg-gray-200 p-4 rounded-md">
+            <h4 className="text-lg font-bold text-black">{profession.name}</h4>
+            <p className="text-black">{profession.description}</p>
           </li>
         ))}
       </ul>

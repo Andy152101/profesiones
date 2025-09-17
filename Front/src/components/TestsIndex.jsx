@@ -1,14 +1,11 @@
-import { useState } from "react";
 import { useTests } from "../context/TestsContext";
 import { useAuth } from "../context/AuthContext"; // 👈 aquí traemos el rol
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
-import ProfessionRecommendation from "./ProfessionRecommendation";
 
 function TestsIndex({ tests }) {
   const { deleteTests } = useTests();
   const { isAdmin, isConsultant, isEmployee } = useAuth(); // 👈 helpers que revisan rol
-  const [showRecommendations, setShowRecommendations] = useState(false);
 
   return (
     <div className="bg-blueSena max-w-full w-full p-6 rounded-md overflow-auto mb-6">
@@ -229,14 +226,6 @@ function TestsIndex({ tests }) {
           </tbody>
         </table>
         <div className="flex justify-end mt-4 gap-2">
-          <button
-            onClick={() => setShowRecommendations(!showRecommendations)}
-            className="bg-green-500 text-white px-4 py-2 rounded-md"
-          >
-            {showRecommendations
-              ? "Ocultar Recomendaciones"
-              : "Ver Recomendaciones"}
-          </button>
           {/* 🔴 Solo Admin ve todos */}
           {isAdmin() && (
             <>
@@ -296,7 +285,6 @@ function TestsIndex({ tests }) {
           )}
         </div>
       </header>
-      {showRecommendations && <ProfessionRecommendation testId={tests._id} />}
     </div>
   );
 }
