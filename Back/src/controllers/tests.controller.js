@@ -43,9 +43,9 @@ const testConfigurations = {
   startime: { min: 1, max: 190, invert: true }, // Menos tiempo es mejor
   startoucherrors: { min: 1, max: 44, invert: true }, // Menos errores es mejor
   fingers: { min: 0, max: 100, invert: false }, // Asumiendo 0-100, más es mejor
-  ishinormalvision: { min: 0, max: 100, invert: false },
-  ishideuteranopia: { min: 0, max: 100, invert: false },
-  ishiportanopia: { min: 0, max: 100, invert: false },
+  ishinormalvision: { min: 0, max: 100, invert: false }, // Más es mejor
+  ishideuteranopia: { min: 0, max: 100, invert: true }, // Más es peor
+  ishiportanopia: { min: 0, max: 100, invert: true }, // Más es peor
   ishidaltonism: { min: 0, max: 100, invert: true }, // Más daltonismo es peor
   lumosityTrain: { min: 0, max: 10000, invert: false }, // Asumiendo un rango amplio, más es mejor
   lumosityMemory: { min: 0, max: 10000, invert: false },
@@ -54,7 +54,6 @@ const testConfigurations = {
   wireGameError: { min: 0, max: 20, invert: true }, // Menos errores es mejor
 };
 
-// Función para analizar los resultados de un test y recomendar profesiones
 export const analyzeTestResults = async (req, res) => {
   try {
     const { id } = req.params;
@@ -65,9 +64,16 @@ export const analyzeTestResults = async (req, res) => {
     }
 
     const scores = [];
-    // Normaliza todos los puntajes y los guarda
+    const ishiharaFields = [
+      "ishinormalvision",
+      "ishideuteranopia",
+      "ishiportanopia",
+      "ishidaltonism",
+    ];
+    let ishiharaScores = [];
+
     for (const field in testConfigurations) {
-      if (test[field] !== undefined) {
+      if (test[field] !== undefined && test[field] !== "No Aplica") {
         const config = testConfigurations[field];
         const score = test[field];
         const normalized = normalizeScore(
@@ -77,6 +83,9 @@ export const analyzeTestResults = async (req, res) => {
           config.invert
         );
         scores.push({ field, normalized });
+        if (ishiharaFields.includes(field)) {
+          ishiharaScores.push(normalized);
+        }
       }
     }
 
@@ -86,13 +95,21 @@ export const analyzeTestResults = async (req, res) => {
         .json({ message: "No hay puntajes analizables en este test." });
     }
 
-    // Encuentra el puntaje normalizado más alto
-    const maxScore = Math.max(...scores.map((s) => s.normalized));
+    // Add composite score for Ishihara
+    if (ishiharaScores.length > 0) {
+      const compositeScore =
+        ishiharaScores.reduce((a, b) => a + b, 0) / ishiharaScores.length;
+      scores.push({ field: "ishiharavision", normalized: compositeScore });
+    }
 
-    // Encuentra todos los campos que tienen el puntaje más alto
-    const bestTestFields = scores
+    const maxScore = Math.max(...scores.map((s) => s.normalized));
+    let bestTestFields = scores
       .filter((s) => s.normalized === maxScore)
       .map((s) => s.field);
+
+    if (bestTestFields.some((field) => ishiharaFields.includes(field))) {
+      bestTestFields = ["ishiharavision"];
+    }
 
     if (bestTestFields.length === 0) {
       return res
@@ -100,12 +117,11 @@ export const analyzeTestResults = async (req, res) => {
         .json({ message: "No se pudo determinar la mejor habilidad del test" });
     }
 
-    // Busca profesiones que coincidan con CUALQUIERA de los mejores campos
     const recommendedProfessions = await Professions.find({
       "linked_skills.test_field": { $in: bestTestFields },
     });
 
-    res.status(200).json({
+    res.json({
       bestTestFields,
       normalizedScore: maxScore,
       recommendedProfessions,
