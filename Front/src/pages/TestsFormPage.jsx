@@ -68,17 +68,6 @@ const TestsFormPage = () => {
     dominanthand: "",
   });
 
-  useEffect(() => {
-    const time1 = parseFloat(form.mineplacementtime1) || 0;
-    const time2 = parseFloat(form.mineplacementtime2) || 0;
-    const total = time1 + time2;
-    setForm((prevForm) => ({
-      ...prevForm,
-      mineplacementtotal: total.toString(),
-      mineplacementscale: getMinePlacementScale(total),
-    }));
-  }, [form.mineplacementtime1, form.mineplacementtime2]);
-
   const getMinePlacementScale = (total) => {
     if (total >= 139) return "MUY BAJO";
     if (total >= 128) return "BAJO";
@@ -87,17 +76,6 @@ const TestsFormPage = () => {
     if (total >= 1) return "MUY ALTO";
     return "NO APLICA";
   };
-
-  useEffect(() => {
-    const time1 = parseFloat(form.minerotationtime1) || 0;
-    const time2 = parseFloat(form.minerotationtime2) || 0;
-    const total = time1 + time2;
-    setForm((prevForm) => ({
-      ...prevForm,
-      minerotationtotal: total.toString(),
-      minerotationscale: getMineRotationTime(total),
-    }));
-  }, [form.minerotationtime1, form.minerotationtime2]);
 
   const getMineRotationTime = (total) => {
     if (total >= 113) return "MUY BAJO";
@@ -108,17 +86,6 @@ const TestsFormPage = () => {
     return "NO APLICA";
   };
 
-  useEffect(() => {
-    const time1 = parseFloat(form.minedisplacementtime1) || 0;
-    const time2 = parseFloat(form.minedisplacementtime2) || 0;
-    const total = time1 + time2;
-    setForm((prevForm) => ({
-      ...prevForm,
-      minedisplacementtotal: total.toString(),
-      minedisplacementscale: getMineDisplacementtime(total),
-    }));
-  }, [form.minedisplacementtime1, form.minedisplacementtime2]);
-
   const getMineDisplacementtime = (total) => {
     if (total >= 106) return "MUY BAJO";
     if (total >= 98) return "BAJO";
@@ -127,25 +94,6 @@ const TestsFormPage = () => {
     if (total >= 1) return "MUY ALTO";
     return "NO APLICA";
   };
-
-  useEffect(() => {
-    // Si mineobservations está vacío o no es un número válido, dejamos el valor como "NO APLICA"
-    if (!form.mineobservations || isNaN(form.mineobservations)) {
-      setForm((prevForm) => ({
-        ...prevForm,
-        purdedominanthand: "NO APLICA",
-      }));
-      return;
-    }
-
-    // Si hay un valor válido en mineobservations, calculamos el valor de purdedominanthand
-    const time1 = parseFloat(form.mineobservations);
-    const total = time1.toString();
-    setForm((prevForm) => ({
-      ...prevForm,
-      purdedominanthand: getPurdeminanthad(total),
-    }));
-  }, [form.mineobservations]);
 
   const getPurdeminanthad = (total) => {
     if (total <= 16) return "MUY BAJO";
@@ -156,26 +104,6 @@ const TestsFormPage = () => {
     return "NO APLICA";
   };
 
-  useEffect(() => {
-    // Verificamos si purdedominanthandscale tiene un valor válido
-    const time1 = parseFloat(form.purdedominanthandscale);
-
-    if (isNaN(time1) || form.purdedominanthandscale === "") {
-      // Si no es un número válido o está vacío, lo dejamos en "NO APLICA"
-      setForm((prevForm) => ({
-        ...prevForm,
-        purdenodominanthand: "NO APLICA",
-      }));
-    } else {
-      // Si es un número válido, calculamos el valor de purdenodominanthand
-      const total = time1.toString();
-      setForm((prevForm) => ({
-        ...prevForm,
-        purdenodominanthand: getPurdenodominanthand(total),
-      }));
-    }
-  }, [form.purdedominanthandscale]);
-
   const getPurdenodominanthand = (total) => {
     if (total <= 14) return "MUY BAJO";
     if (total <= 16) return "BAJO";
@@ -184,21 +112,6 @@ const TestsFormPage = () => {
     if (total >= 20) return "MUY ALTO";
     return "NO APLICA";
   };
-
-  useEffect(() => {
-    const time1 = parseFloat(form.purdenodominanthandscale);
-    if (isNaN(time1) || form.purdenodominanthandscale === "") {
-      setForm((prevForm) => ({
-        ...prevForm,
-        purdebothhands: "NO APLICA",
-      }));
-    } else {
-      setForm((prevForm) => ({
-        ...prevForm,
-        purdebothhands: getPurdebothhands(time1),
-      }));
-    }
-  }, [form.purdenodominanthandscale]);
 
   const getPurdebothhands = (total) => {
     if (total <= 13) return "MUY BAJO";
@@ -209,21 +122,6 @@ const TestsFormPage = () => {
     return "NO APLICA";
   };
 
-  useEffect(() => {
-    const time1 = parseFloat(form.purdebothhandsscale);
-    if (isNaN(time1) || form.purdebothhandsscale === "") {
-      setForm((prevForm) => ({
-        ...prevForm,
-        purdeassemble: "NO APLICA",
-      }));
-    } else {
-      setForm((prevForm) => ({
-        ...prevForm,
-        purdeassemble: getPurdeassemble(time1),
-      }));
-    }
-  }, [form.purdebothhandsscale]);
-
   const getPurdeassemble = (total) => {
     if (total <= 37) return "MUY BAJO";
     if (total <= 42) return "BAJO";
@@ -232,21 +130,6 @@ const TestsFormPage = () => {
     if (total >= 52) return "MUY ALTO";
     return "NO APLICA";
   };
-
-  useEffect(() => {
-    const time1 = parseFloat(form.activityjtest);
-    if (isNaN(time1) || form.activityjtest === "") {
-      setForm((prevForm) => ({
-        ...prevForm,
-        activityjtestscale: "NO APLICA",
-      }));
-    } else {
-      setForm((prevForm) => ({
-        ...prevForm,
-        activityjtestscale: getActivityjtestscale(time1),
-      }));
-    }
-  }, [form.activityjtest]);
 
   const getActivityjtestscale = (total) => {
     if (total <= 43) return "MUY BAJO";
@@ -257,21 +140,6 @@ const TestsFormPage = () => {
     return "NO APLICA";
   };
 
-  useEffect(() => {
-    const time1 = parseFloat(form.activityjtestobservations);
-    if (isNaN(time1) || form.activityjtestobservations === "") {
-      setForm((prevForm) => ({
-        ...prevForm,
-        reaction1: "NO APLICA",
-      }));
-    } else {
-      setForm((prevForm) => ({
-        ...prevForm,
-        reaction1: getReaction1(time1),
-      }));
-    }
-  }, [form.activityjtestobservations]);
-
   const getReaction1 = (total) => {
     if (total <= 43) return "MUY BAJO";
     if (total <= 50) return "BAJO";
@@ -280,21 +148,6 @@ const TestsFormPage = () => {
     if (total >= 64) return "MUY ALTO";
     return "NO APLICA";
   };
-
-  useEffect(() => {
-    const time1 = parseFloat(form.reaction1scale);
-    if (isNaN(time1) || form.reaction1scale === "") {
-      setForm((prevForm) => ({
-        ...prevForm,
-        reaction2: "NO APLICA",
-      }));
-    } else {
-      setForm((prevForm) => ({
-        ...prevForm,
-        reaction2: getReaction2(time1),
-      }));
-    }
-  }, [form.reaction1scale]);
 
   const getReaction2 = (total) => {
     if (total >= 301) return "NO TERMINO";
@@ -306,21 +159,6 @@ const TestsFormPage = () => {
     return "NO APLICA";
   };
 
-  useEffect(() => {
-    const time1 = parseFloat(form.fingersobservations);
-    if (isNaN(time1) || form.fingersobservations === "") {
-      setForm((prevForm) => ({
-        ...prevForm,
-        ishinormalvision: "NO APLICA",
-      }));
-    } else {
-      setForm((prevForm) => ({
-        ...prevForm,
-        ishinormalvision: getIshinormalvision(time1),
-      }));
-    }
-  }, [form.fingersobservations]);
-
   const getIshinormalvision = (total) => {
     if (total <= 3000) return "MUY BAJO";
     if (total <= 5500) return "BAJO";
@@ -329,21 +167,6 @@ const TestsFormPage = () => {
     if (total >= 10001) return "MUY ALTO";
     return "NO APLICA";
   };
-
-  useEffect(() => {
-    const time1 = parseFloat(form.ishideuteranopia);
-    if (isNaN(time1) || form.ishideuteranopia === "") {
-      setForm((prevForm) => ({
-        ...prevForm,
-        ishiportanopia: "NO APLICA",
-      }));
-    } else {
-      setForm((prevForm) => ({
-        ...prevForm,
-        ishiportanopia: getIshiportanopia(time1),
-      }));
-    }
-  }, [form.ishideuteranopia]);
 
   const getIshiportanopia = (total) => {
     if (total <= 16100) return "MUY BAJO";
@@ -354,21 +177,6 @@ const TestsFormPage = () => {
     return "NO APLICA";
   };
 
-  useEffect(() => {
-    const time1 = parseFloat(form.ishidaltonism);
-    if (isNaN(time1) || form.ishidaltonism === "") {
-      setForm((prevForm) => ({
-        ...prevForm,
-        ishiobservations: "NO APLICA",
-      }));
-    } else {
-      setForm((prevForm) => ({
-        ...prevForm,
-        ishiobservations: getIshiobservations(time1),
-      }));
-    }
-  }, [form.ishidaltonism]);
-
   const getIshiobservations = (total) => {
     if (total <= 4300) return "MUY BAJO";
     if (total <= 7600) return "BAJO";
@@ -377,21 +185,6 @@ const TestsFormPage = () => {
     if (total >= 15251) return "MUY ALTO";
     return "NO APLICA";
   };
-
-  useEffect(() => {
-    const time1 = parseFloat(form.startime);
-    if (isNaN(time1) || form.startime === "") {
-      setForm((prevForm) => ({
-        ...prevForm,
-        starTimeOne: "NO APLICA",
-      }));
-    } else {
-      setForm((prevForm) => ({
-        ...prevForm,
-        starTimeOne: getStartime(time1),
-      }));
-    }
-  }, [form.startime]);
 
   const getStartime = (total) => {
     if (total >= 190) return "MUY BAJO";
@@ -402,21 +195,6 @@ const TestsFormPage = () => {
     return "NO APLICA";
   };
 
-  useEffect(() => {
-    const time1 = parseFloat(form.startoucherrors);
-    if (isNaN(time1) || form.startoucherrors === "") {
-      setForm((prevForm) => ({
-        ...prevForm,
-        starTouchErrorsOne: "NO APLICA",
-      }));
-    } else {
-      setForm((prevForm) => ({
-        ...prevForm,
-        starTouchErrorsOne: getStartoucherrors(time1),
-      }));
-    }
-  }, [form.startoucherrors]);
-
   const getStartoucherrors = (total) => {
     if (total >= 44) return "MUY BAJO";
     if (total >= 23) return "BAJO";
@@ -425,14 +203,6 @@ const TestsFormPage = () => {
     if (total >= 1) return "MUY ALTO";
     return "NO APLICA";
   };
-
-  useEffect(() => {
-    const snellenValue = form.visualAcuity;
-    setForm((prevForm) => ({
-      ...prevForm,
-      visualAcuityLevel: getVisualAcuity(snellenValue),
-    }));
-  }, [form.visualAcuity]);
 
   const getVisualAcuity = (snellenValue) => {
     switch (snellenValue) {
@@ -454,6 +224,247 @@ const TestsFormPage = () => {
     }
   };
 
+  const calcularNivelWireGame = (tiempo, errores) => {
+    if (tiempo <= 36 && (errores === 0 || errores === 1)) {
+      return "ALTO";
+    } else if (tiempo >= 37 && tiempo <= 40 && errores >= 2 && errores <= 4) {
+      return "MEDIO";
+    } else if (tiempo > 41 && errores > 5) {
+      return "BAJO";
+    }
+    return "NO APLICA"; // Si no se cumplen las condiciones, devolvemos "NO APLICA"
+  };
+
+  useEffect(() => {
+    const time1 = parseFloat(form.mineplacementtime1) || 0;
+    const time2 = parseFloat(form.mineplacementtime2) || 0;
+    const total = time1 + time2;
+    setForm((prevForm) => ({
+      ...prevForm,
+      mineplacementtotal: total.toString(),
+      mineplacementscale: getMinePlacementScale(total),
+    }));
+  }, [form.mineplacementtime1, form.mineplacementtime2]);
+
+  useEffect(() => {
+    const time1 = parseFloat(form.minerotationtime1) || 0;
+    const time2 = parseFloat(form.minerotationtime2) || 0;
+    const total = time1 + time2;
+    setForm((prevForm) => ({
+      ...prevForm,
+      minerotationtotal: total.toString(),
+      minerotationscale: getMineRotationTime(total),
+    }));
+  }, [form.minerotationtime1, form.minerotationtime2]);
+
+  useEffect(() => {
+    const time1 = parseFloat(form.minedisplacementtime1) || 0;
+    const time2 = parseFloat(form.minedisplacementtime2) || 0;
+    const total = time1 + time2;
+    setForm((prevForm) => ({
+      ...prevForm,
+      minedisplacementtotal: total.toString(),
+      minedisplacementscale: getMineDisplacementtime(total),
+    }));
+  }, [form.minedisplacementtime1, form.minedisplacementtime2]);
+
+  useEffect(() => {
+    // Si mineobservations está vacío o no es un número válido, dejamos el valor como "NO APLICA"
+    if (!form.mineobservations || isNaN(form.mineobservations)) {
+      setForm((prevForm) => ({
+        ...prevForm,
+        purdedominanthand: "NO APLICA",
+      }));
+      return;
+    }
+
+    // Si hay un valor válido en mineobservations, calculamos el valor de purdedominanthand
+    const time1 = parseFloat(form.mineobservations);
+    const total = time1.toString();
+    setForm((prevForm) => ({
+      ...prevForm,
+      purdedominanthand: getPurdeminanthad(total),
+    }));
+  }, [form.mineobservations]);
+
+  useEffect(() => {
+    // Verificamos si purdedominanthandscale tiene un valor válido
+    const time1 = parseFloat(form.purdedominanthandscale);
+
+    if (isNaN(time1) || form.purdedominanthandscale === "") {
+      // Si no es un número válido o está vacío, lo dejamos en "NO APLICA"
+      setForm((prevForm) => ({
+        ...prevForm,
+        purdenodominanthand: "NO APLICA",
+      }));
+    } else {
+      // Si es un número válido, calculamos el valor de purdenodominanthand
+      const total = time1.toString();
+      setForm((prevForm) => ({
+        ...prevForm,
+        purdenodominanthand: getPurdenodominanthand(total),
+      }));
+    }
+  }, [form.purdedominanthandscale]);
+
+  useEffect(() => {
+    const time1 = parseFloat(form.purdenodominanthandscale);
+    if (isNaN(time1) || form.purdenodominanthandscale === "") {
+      setForm((prevForm) => ({
+        ...prevForm,
+        purdebothhands: "NO APLICA",
+      }));
+    } else {
+      setForm((prevForm) => ({
+        ...prevForm,
+        purdebothhands: getPurdebothhands(time1),
+      }));
+    }
+  }, [form.purdenodominanthandscale]);
+
+  useEffect(() => {
+    const time1 = parseFloat(form.purdebothhandsscale);
+    if (isNaN(time1) || form.purdebothhandsscale === "") {
+      setForm((prevForm) => ({
+        ...prevForm,
+        purdeassemble: "NO APLICA",
+      }));
+    } else {
+      setForm((prevForm) => ({
+        ...prevForm,
+        purdeassemble: getPurdeassemble(time1),
+      }));
+    }
+  }, [form.purdebothhandsscale]);
+
+  useEffect(() => {
+    const time1 = parseFloat(form.activityjtest);
+    if (isNaN(time1) || form.activityjtest === "") {
+      setForm((prevForm) => ({
+        ...prevForm,
+        activityjtestscale: "NO APLICA",
+      }));
+    } else {
+      setForm((prevForm) => ({
+        ...prevForm,
+        activityjtestscale: getActivityjtestscale(time1),
+      }));
+    }
+  }, [form.activityjtest]);
+
+  useEffect(() => {
+    const time1 = parseFloat(form.activityjtestobservations);
+    if (isNaN(time1) || form.activityjtestobservations === "") {
+      setForm((prevForm) => ({
+        ...prevForm,
+        reaction1: "NO APLICA",
+      }));
+    } else {
+      setForm((prevForm) => ({
+        ...prevForm,
+        reaction1: getReaction1(time1),
+      }));
+    }
+  }, [form.activityjtestobservations]);
+
+  useEffect(() => {
+    const time1 = parseFloat(form.reaction1scale);
+    if (isNaN(time1) || form.reaction1scale === "") {
+      setForm((prevForm) => ({
+        ...prevForm,
+        reaction2: "NO APLICA",
+      }));
+    } else {
+      setForm((prevForm) => ({
+        ...prevForm,
+        reaction2: getReaction2(time1),
+      }));
+    }
+  }, [form.reaction1scale]);
+
+  useEffect(() => {
+    const time1 = parseFloat(form.fingersobservations);
+    if (isNaN(time1) || form.fingersobservations === "") {
+      setForm((prevForm) => ({
+        ...prevForm,
+        ishinormalvision: "NO APLICA",
+      }));
+    } else {
+      setForm((prevForm) => ({
+        ...prevForm,
+        ishinormalvision: getIshinormalvision(time1),
+      }));
+    }
+  }, [form.fingersobservations]);
+
+  useEffect(() => {
+    const time1 = parseFloat(form.ishideuteranopia);
+    if (isNaN(time1) || form.ishideuteranopia === "") {
+      setForm((prevForm) => ({
+        ...prevForm,
+        ishiportanopia: "NO APLICA",
+      }));
+    } else {
+      setForm((prevForm) => ({
+        ...prevForm,
+        ishiportanopia: getIshiportanopia(time1),
+      }));
+    }
+  }, [form.ishideuteranopia]);
+
+  useEffect(() => {
+    const time1 = parseFloat(form.ishidaltonism);
+    if (isNaN(time1) || form.ishidaltonism === "") {
+      setForm((prevForm) => ({
+        ...prevForm,
+        ishiobservations: "NO APLICA",
+      }));
+    } else {
+      setForm((prevForm) => ({
+        ...prevForm,
+        ishiobservations: getIshiobservations(time1),
+      }));
+    }
+  }, [form.ishidaltonism]);
+
+  useEffect(() => {
+    const time1 = parseFloat(form.startime);
+    if (isNaN(time1) || form.startime === "") {
+      setForm((prevForm) => ({
+        ...prevForm,
+        starTimeOne: "NO APLICA",
+      }));
+    } else {
+      setForm((prevForm) => ({
+        ...prevForm,
+        starTimeOne: getStartime(time1),
+      }));
+    }
+  }, [form.startime]);
+
+  useEffect(() => {
+    const time1 = parseFloat(form.startoucherrors);
+    if (isNaN(time1) || form.startoucherrors === "") {
+      setForm((prevForm) => ({
+        ...prevForm,
+        starTouchErrorsOne: "NO APLICA",
+      }));
+    } else {
+      setForm((prevForm) => ({
+        ...prevForm,
+        starTouchErrorsOne: getStartoucherrors(time1),
+      }));
+    }
+  }, [form.startoucherrors]);
+
+  useEffect(() => {
+    const snellenValue = form.visualAcuity;
+    setForm((prevForm) => ({
+      ...prevForm,
+      visualAcuityLevel: getVisualAcuity(snellenValue),
+    }));
+  }, [form.visualAcuity]);
+
   useEffect(() => {
     const tiempo = parseFloat(form.wireGameTime);
     const errores = parseInt(form.wireGameError, 10);
@@ -474,17 +485,6 @@ const TestsFormPage = () => {
       wireGameLevel: nivel,
     }));
   }, [form.wireGameTime, form.wireGameError]);
-
-  const calcularNivelWireGame = (tiempo, errores) => {
-    if (tiempo <= 36 && (errores === 0 || errores === 1)) {
-      return "ALTO";
-    } else if (tiempo >= 37 && tiempo <= 40 && errores >= 2 && errores <= 4) {
-      return "MEDIO";
-    } else if (tiempo > 41 && errores > 5) {
-      return "BAJO";
-    }
-    return "NO APLICA"; // Si no se cumplen las condiciones, devolvemos "NO APLICA"
-  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
